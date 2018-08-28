@@ -17,4 +17,8 @@ CC=gcc FC=gfortran cmake -G "MSYS Makefiles" \
     -DMPI_INCLUDE_PATH=$MINGW_PREFIX/include -DMPI_C_LIBRARY="$MSMPI_LIB64/msmpi.lib" \
     -DMPI_Fortran_LIBRARY="$MSMPI_LIB64/msmpifec.lib" ..
 
-cmake --build . --target install -- -j2
+# Sometimes there are intermittent issues (e.g. related to locked files).
+# The construction below means "try with 2 cores, and if it fails, try again with 1 core".
+cmake --build . --target install -- -j2 \
+    || cmake --build . --target install \
+    || cmake --build . --target install

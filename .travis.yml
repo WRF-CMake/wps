@@ -10,7 +10,7 @@ env:
     - WRF_COMMIT=wrf-cmake
     - WPS_COMMIT=$TRAVIS_COMMIT
     - WATS_REPO=WRF-CMake/wats
-    - WATS_BRANCH=master
+    - WATS_BRANCH=wats-ci # TODO change to master
     - WATS_DATA_REPO=WRF-CMake/wats-data
     - WATS_MODE=wps
 
@@ -65,7 +65,6 @@ jobs:
         - GRIB2=0
         - MODE=dm+sm
         - NESTING=basic
-        - IDEAL_CASE=ALL
 
     - stage: build
       os: osx
@@ -97,8 +96,6 @@ jobs:
 
     - stage: wats
       os: linux
-      git:
-        depth: 1 # ideally we'd like to disable cloning completely
       before_install: skip
       install:
         - git clone --depth=1 --branch=$WATS_BRANCH https://github.com/$WATS_REPO.git wats
@@ -107,7 +104,6 @@ jobs:
         - wats/.ci/travis/trigger-wats-appveyor.sh
 
 before_install:
-  - ln -r -s . ../WPS
   - pushd ..
   - git clone --depth=100 --no-single-branch https://github.com/$WRF_REPO.git WRF
   - cd WRF
