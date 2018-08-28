@@ -8,7 +8,7 @@ environment:
   global:
     WRF_REPO: WRF-CMake/WRF
     WRF_COMMIT: wrf-cmake
-    
+
   matrix:
     - BUILD_TYPE: Release
       MODE: serial
@@ -24,7 +24,7 @@ environment:
 
 install:
   - cd ..
-  - git clone --depth=100 --no-single-branch git@github.com:%WRF_REPO%.git WRF
+  - git clone --depth=100 --no-single-branch https://github.com/%WRF_REPO%.git WRF
   - cd WRF
   - git checkout %WRF_COMMIT%
   - call .ci\appveyor\setup-dependencies.bat
