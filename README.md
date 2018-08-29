@@ -1,4 +1,4 @@
-<p align="center"><img src="https://github.com/WRF-CMake/WRF/blob/wrf-cmake/images/WRF-Cmake_Logo.svg" alt="WRF-CMake Logo" width="160"></p>
+# WPS-CMake [![Build status](https://ci.appveyor.com/api/projects/status/8axylclvn10h32kk/branch/wps-cmake?svg=true)](https://ci.appveyor.com/project/WRF-CMake/wps/branch/wps-cmake) [![Build Status](https://travis-ci.com/WRF-CMake/WPS.svg?branch=wps-cmake)](https://travis-ci.com/WRF-CMake/WPS)
 
 WPS-CMake adds CMake support to the latest version of the [Advanced Research Weather Research and Forecasting](https://www.mmm.ucar.edu/weather-research-and-forecasting-model) model with the intention of streamlining and simplifying its configuration and build process. In our view, the use of CMake provides model developers, code maintainers, and end-users with several advantages such as robust incremental rebuilds, flexible library dependency discovery, native tool-chains for Windows, macOS, and Linux with minimal external dependencies, thus increasing portability, and automatic generation of project files for different platforms.
 
