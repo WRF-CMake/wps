@@ -43,6 +43,7 @@ if (NOT CMAKE_CONFIGURATION_TYPES) # ignore for multi-config generators like MSV
 endif()
 
 set(ARCH_CUSTOM "" CACHE STRING "Name of custom architecture configuration to use")
+option(DISABLE_RUNTIME_CHECKS "Disable compiler runtime checks in Release mode" OFF)
 option(DEBUG_ARCH "Print arch files debug information" OFF)
 option(DEBUG_GLOBAL_DEFINITIONS "Print global preprocessor definitions applied to all source files" OFF)
 
@@ -123,6 +124,11 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_other}")
 set(CMAKE_Fortran_FLAGS_DEBUG "${CMAKE_Fortran_FLAGS_DEBUG} ${Fortran_checked}")
 set(CMAKE_Fortran_FLAGS_RELEASE "${CMAKE_Fortran_FLAGS_RELEASE} ${Fortran_optimized}")
 set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${Fortran_preprocess} ${Fortran_io} ${Fortran_other}")
+
+if (NOT DISABLE_RUNTIME_CHECKS)
+    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} ${C_checked}")
+    set(CMAKE_Fortran_FLAGS_RELEASE "${CMAKE_Fortran_FLAGS_RELEASE} ${Fortran_checked}")
+endif()
 
 if (SAVE_TEMPS)
 	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_temps}")
