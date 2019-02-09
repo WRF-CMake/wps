@@ -231,7 +231,8 @@ if (ENABLE_NETCDF)
 
 	# If we link against the static netCDF-C library (currently required on mingw64) then its
 	# HDF5 dependency is not linked into the netCDF-C library (not exactly sure why).
-	# To fix that we try to import netCDF-C by CMake config file as this has all dependencies defined.
+    # Similarly, netCDF-Fortran lacks the netCDF-C dependency.
+    # The following fixes that.
 	STRING(REGEX MATCH ".a$" match ${NETCDF_LIBRARY})
 	if (match)
 		find_package(HDF5 REQUIRED COMPONENTS C HL)

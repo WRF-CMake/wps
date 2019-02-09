@@ -21,6 +21,10 @@ steps:
 - script: .ci/azure/scripts/install-wps.sh
   displayName: Install WPS
 
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'
+
 - script: |
     git clone --depth=1 --branch=$WATS_BRANCH https://github.com/$WATS_REPO.git wats
     pip install -r wats/requirements.txt
