@@ -29,8 +29,10 @@ steps:
     git checkout %WRF_COMMIT%
     call .ci\appveyor\setup-dependencies.bat
     call .ci\appveyor\install-wrf.bat
-    popd
-    call .ci\appveyor\install-wps.bat
+  displayName: Install dependencies & WRF
+
+- script: call .ci\appveyor\install-wps.bat
+  displayName: Install WPS
 
 #- task: PublishPipelineArtifact@0
 #  displayName: Publish binaries

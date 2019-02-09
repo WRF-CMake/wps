@@ -9,14 +9,17 @@ steps:
   displayName: Dump environment variables
 
 - script: |
-    pushd ..
+    set -e
+    cd ..
     git clone --depth=100 --no-single-branch https://github.com/$WRF_REPO.git WRF
     cd WRF
     git checkout $WRF_COMMIT
-    .ci/travis/setup-dependencies.sh
-    .ci/travis/install-wrf.sh
-    popd
-    .ci/travis/install-wps.sh
+    .ci/azure/scripts/setup-dependencies.sh
+    .ci/azure/scripts/install-wrf.sh
+  displayName: Install dependencies & WRF
+
+- script: .ci/azure/scripts/install-wps.sh
+  displayName: Install WPS
 
 #- task: PublishPipelineArtifact@0
 #  displayName: Publish binaries
