@@ -1,0 +1,39 @@
+steps:
+- pwsh: |
+    Get-CimInstance Win32_Processor | Select-Object -Property [a-z]*
+    Get-CimInstance Win32_OperatingSystem | Select-Object -Property [a-z]*
+    Get-CimInstance Win32_LogicalDisk
+  displayName: Dump VM specs
+
+- script: set
+  displayName: Dump environment variables
+
+# We will install the latest version later on.
+- pwsh: |
+    $products = Get-CimInstance -ClassName Win32_Product -Filter "Name like 'Microsoft MPI%'"
+    foreach ($p in $products) {
+      echo "Uninstalling $($p.Name)"
+      Invoke-CimMethod -InputObject $p -MethodName Uninstall
+    }
+  condition: and(succeeded(), startsWith(variables.MODE, 'dm'))
+  displayName: Remove existing MSMPI
+
+- script: |
+    choco install msys2 --params "/InstallDir:c:\msys64"
+  displayName: Install MSYS2
+
+- script: |
+    pushd ..
+    git clone --depth=100 --no-single-branch https://github.com/%WRF_REPO%.git WRF
+    cd WRF
+    git checkout %WRF_COMMIT%
+    call .ci\appveyor\setup-dependencies.bat
+    call .ci\appveyor\install-wrf.bat
+    popd
+    call .ci\appveyor\install-wps.bat
+
+#- task: PublishPipelineArtifact@0
+#  displayName: Publish binaries
+#  inputs:
+#    artifactName: binaries_$(OS_NAME)_$(BUILD_SYSTEM)_$(BUILD_TYPE)_$(MODE)
+#    targetPath: build/install/main

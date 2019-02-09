@@ -1,0 +1,26 @@
+steps:
+- script: |
+    free -m
+    lscpu
+    df -h --total
+  displayName: Dump VM specs
+
+- script: printenv
+  displayName: Dump environment variables
+
+- script: |
+    pushd ..
+    git clone --depth=100 --no-single-branch https://github.com/$WRF_REPO.git WRF
+    cd WRF
+    git checkout $WRF_COMMIT
+    .ci/travis/setup-dependencies.sh
+    .ci/travis/install-wrf.sh
+    popd
+    .ci/travis/install-wps.sh
+
+#- task: PublishPipelineArtifact@0
+#  displayName: Publish binaries
+#  condition: and(succeeded(), eq(variables.BUILD_SYSTEM, 'cmake'))
+#  inputs:
+#    artifactName: binaries_$(OS_NAME)_$(BUILD_SYSTEM)_$(BUILD_TYPE)_$(MODE)
+#    targetPath: build/install/main
