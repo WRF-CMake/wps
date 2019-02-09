@@ -31,8 +31,9 @@ steps:
   displayName: Install WATS
 
 - script: |
-    if [[ $MODE == dm* ]]; then export MPI_FLAG=--mpi ; fi
-    python wats/wats/main.py run --mode $WATS_MODE --wrf-dir ../WRF --wps-dir . --work-dir wats_work $MPI_FLAG
+    if [[ $MODE == dm* ]]; then mpi_flag=--mpi ; fi
+    if [[ $BUILD_SYSTEM == cmake ]]; then dir_suffix=build/install ; fi
+    python wats/wats/main.py run --mode $WATS_MODE --wrf-dir ../WRF/$dir_suffix --wps-dir ./$dir_suffix --work-dir wats_work $mpi_flag
   displayName: Run WATS
 
 #- task: PublishPipelineArtifact@0

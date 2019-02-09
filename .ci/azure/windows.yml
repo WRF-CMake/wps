@@ -44,8 +44,9 @@ steps:
   displayName: Install WATS
 
 - pwsh: |
-    if ($Env:MODE.StartsWith("dm")) { $Env:MPI_FLAG="--mpi" }
-    python wats/wats/main.py run --mode $Env:WATS_MODE --wrf-dir ../WRF --wps-dir . --work-dir wats_work $Env:MPI_FLAG
+    if ($Env:MODE.StartsWith("dm")) { $mpi_flag="--mpi" }
+    if ($Env:BUILD_SYSTEM -eq "cmake") { $dir_suffix="build/install" }
+    python wats/wats/main.py run --mode $Env:WATS_MODE --wrf-dir ../WRF/$dir_suffix --wps-dir ./$dir_suffix --work-dir wats_work $mpi_flag
   displayName: Run WATS
 
 #- task: PublishPipelineArtifact@0

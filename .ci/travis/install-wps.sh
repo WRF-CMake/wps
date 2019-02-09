@@ -54,6 +54,18 @@ elif [ $SYSTEM == "make" ]; then
     echo "./compile"
     ./compile
 
+    if [ ! -f geogrid.exe ]; then
+        exit 1
+    fi
+
+    if [ ! -f ungrib.exe ]; then
+        exit 1
+    fi
+
+    if [ ! -f metgrid.exe ]; then
+        exit 1
+    fi
+
 else
     echo "Unknown system: ${system}"
     exit 1
