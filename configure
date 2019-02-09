@@ -194,20 +194,18 @@ EOF
   # do not do this test for MIC, which cross compiles
   if [ -z "`grep 'SCC.*mmic' configure.wps`" ] ; then
     # Detecting whether if mpi compiler wrapper supports -cc/-f90 options
-    if [ -z "`grep -i -E '^DMPARALLEL[ \t]*=.*#' configure.wps`" ] ; then
-      mpicc -cc=$SCC -o ${foo} ${foo}.c > /dev/null 2>&1
-      if [ $? != 0 ]; then
-        sed 's/-cc=$(SCC)//' configure.wps > configure.wps.edit
-        mv configure.wps.edit configure.wps
-      fi
-      rm ${foo} ${foo}.o 2> /dev/null
-      mpif90 -f90=$SFC -o ${foo} ${foo}.f > /dev/null 2>&1
-      if [ $? != 0 ]; then
-        sed 's/-f90=$(SFC)//'  configure.wps > configure.wps.edit
-        mv configure.wps.edit configure.wps
-      fi
-      rm ${foo} ${foo}.o 2> /dev/null
+    mpicc -cc=$SCC -o ${foo} ${foo}.c > /dev/null 2>&1
+    if [ $? != 0 ]; then
+      sed 's/-cc=$(SCC)//' configure.wps > configure.wps.edit
+      mv configure.wps.edit configure.wps
     fi
+    rm ${foo} ${foo}.o 2> /dev/null
+    mpif90 -f90=$SFC -o ${foo} ${foo}.f > /dev/null 2>&1
+    if [ $? != 0 ]; then
+      sed 's/-f90=$(SFC)//'  configure.wps > configure.wps.edit
+      mv configure.wps.edit configure.wps
+    fi
+    rm ${foo} ${foo}.o 2> /dev/null
   fi
 
     nct=`nm $NETCDF/lib/libnetcdf.a | grep '^0' | cut -d' ' -f 1 | head -1 | wc -c | awk '{print $1+0}'`
