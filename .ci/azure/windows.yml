@@ -34,6 +34,16 @@ steps:
 - script: call .ci\appveyor\install-wps.bat
   displayName: Install WPS
 
+- script: |
+    git clone --depth=1 --branch=%WATS_BRANCH% https://github.com/$WATS_REPO.git wats
+    pip install -r wats/requirements.txt
+  displayName: Install WATS
+
+- pwsh: |
+    if ($Env:MODE.StartsWith("dm")) { $Env:MPI_FLAG="--mpi" }
+    python wats/wats/main.py run --mode $Env:WATS_MODE --wrf-dir ../WRF --wps-dir . --work-dir wats_work $Env:MPI_FLAG
+  displayName: Run WATS
+
 #- task: PublishPipelineArtifact@0
 #  displayName: Publish binaries
 #  inputs:

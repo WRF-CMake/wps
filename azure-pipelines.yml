@@ -4,6 +4,9 @@ trigger:
 variables:
   WRF_REPO: WRF-CMake/WRF
   WRF_COMMIT: letmaik/azure-pipelines
+  WATS_REPO: WRF-CMake/wats
+  WATS_BRANCH: master
+  WATS_MODE: wps
 
 jobs:
 - job: windows_cmake_serial

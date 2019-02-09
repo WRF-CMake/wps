@@ -22,6 +22,16 @@ steps:
 - script: .ci/azure/scripts/install-wps.sh
   displayName: Install WPS
 
+- script: |
+    git clone --depth=1 --branch=$WATS_BRANCH https://github.com/$WATS_REPO.git wats
+    pip install -r wats/requirements.txt
+  displayName: Install WATS
+
+- script: |
+    if [[ $MODE == dm* ]]; then export MPI_FLAG=--mpi ; fi
+    python wats/wats/main.py run --mode $WATS_MODE --wrf-dir ../WRF --wps-dir . --work-dir wats_work $MPI_FLAG
+  displayName: Run WATS
+
 #- task: PublishPipelineArtifact@0
 #  displayName: Publish binaries
 #  condition: and(succeeded(), eq(variables.BUILD_SYSTEM, 'cmake'))
