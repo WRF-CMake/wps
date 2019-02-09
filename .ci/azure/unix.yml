@@ -1,9 +1,15 @@
 steps:
 - script: |
-    top -l 1 -s 0 | grep PhysMem
-    system_profiler | grep Processor
-    sysctl hw
-    df -h
+    if [[ $OS_NAME == 'osx' ]]; then
+      top -l 1 -s 0 | grep PhysMem
+      system_profiler | grep Processor
+      sysctl hw
+      df -h
+    else
+      free -m
+      lscpu
+      df -h --total
+    fi
   displayName: Dump VM specs
 
 - script: printenv

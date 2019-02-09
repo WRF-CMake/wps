@@ -50,7 +50,7 @@ jobs:
     FC: gfortran
     MODE: serial
   steps:
-  - template: .ci/azure/ubuntu.yml
+  - template: .ci/azure/unix.yml
 
 - job: ubuntu_make_dmpar
   pool:
@@ -63,7 +63,7 @@ jobs:
     FC: gfortran
     MODE: dmpar
   steps:
-  - template: .ci/azure/ubuntu.yml
+  - template: .ci/azure/unix.yml
 
 - job: ubuntu_cmake_serial
   pool:
@@ -79,7 +79,7 @@ jobs:
     GRIB2: 1
     NESTING: basic
   steps:
-  - template: .ci/azure/ubuntu.yml
+  - template: .ci/azure/unix.yml
 
 - job: ubuntu_cmake_dmpar
   pool:
@@ -95,7 +95,7 @@ jobs:
     GRIB2: 1
     NESTING: basic
   steps:
-  - template: .ci/azure/ubuntu.yml
+  - template: .ci/azure/unix.yml
 
 - job: macos_make_serial
   pool:
@@ -108,7 +108,7 @@ jobs:
     FC: gfortran-8
     MODE: serial
   steps:
-  - template: .ci/azure/macos.yml
+  - template: .ci/azure/unix.yml
 
 - job: macos_make_dmpar
   pool:
@@ -121,7 +121,7 @@ jobs:
     FC: gfortran-8
     MODE: dmpar
   steps:
-  - template: .ci/azure/macos.yml
+  - template: .ci/azure/unix.yml
 
 - job: macos_cmake_serial
   pool:
@@ -137,7 +137,7 @@ jobs:
     GRIB2: 1
     NESTING: basic
   steps:
-  - template: .ci/azure/macos.yml
+  - template: .ci/azure/unix.yml
 
 - job: macos_cmake_dmpar
   pool:
@@ -153,4 +153,4 @@ jobs:
     GRIB2: 1
     NESTING: basic
   steps:
-  - template: .ci/azure/macos.yml
+  - template: .ci/azure/unix.yml

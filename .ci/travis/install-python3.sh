@@ -6,9 +6,8 @@ set -ex
 
 if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
 
-    brew update
-    # Install python 3.6.5 (https://stackoverflow.com/a/51125014) so that we can use netcdf wheels
-    brew upgrade https://raw.githubusercontent.com/Homebrew/homebrew-core/f2a764ef944b1080be64bd88dca9a1d80130c558/Formula/python.rb
+    # Existing python is 2.7, upgrade to 3.
+    brew upgrade python
 
     python3 -V
     pip3 -V
