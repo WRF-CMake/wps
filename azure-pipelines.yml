@@ -9,191 +9,200 @@ variables:
   WATS_MODE: wps
 
 jobs:
-- job: windows_cmake_serial
-  pool:
-    vmImage: vs2017-win2016
-  variables:
-    OS_NAME: windows
-    BUILD_SYSTEM: cmake
-    BUILD_TYPE: Debug
-    MODE: serial
-    GRIB1: 0
-    GRIB2: 1
-    NESTING: basic
-  steps:
-  - template: .ci/azure/windows.yml
-
-- job: windows_cmake_dmpar
-  pool:
-    vmImage: vs2017-win2016
-  variables:
-    OS_NAME: windows
-    BUILD_SYSTEM: cmake
-    BUILD_TYPE: Debug
-    MODE: dmpar
-    GRIB1: 0
-    GRIB2: 1
-    NESTING: basic
-  steps:
-  - template: .ci/azure/windows.yml
+#- job: windows_cmake_serial
+#  pool:
+#    vmImage: vs2017-win2016
+#  variables:
+#    OS_NAME: windows
+#    BUILD_SYSTEM: cmake
+#    BUILD_TYPE: Debug
+#    MODE: serial
+#    GRIB1: 0
+#    GRIB2: 1
+#    NESTING: basic
+#  steps:
+#  - template: .ci/azure/windows.yml
+#
+#- job: windows_cmake_dmpar
+#  pool:
+#    vmImage: vs2017-win2016
+#  variables:
+#    OS_NAME: windows
+#    BUILD_SYSTEM: cmake
+#    BUILD_TYPE: Debug
+#    MODE: dmpar
+#    GRIB1: 0
+#    GRIB2: 1
+#    NESTING: basic
+#  steps:
+#  - template: .ci/azure/windows.yml
 
 # TODO CC/FC are not used for Make builds
 
-- job: ubuntu_make_serial
-  pool:
-    vmImage: ubuntu-16.04
-  variables:
+#- job: linux_make_serial
+#  pool:
+#    vmImage: ubuntu-16.04
+#  variables:
+#    OS_NAME: linux
+#    BUILD_SYSTEM: make
+#    BUILD_TYPE: Debug
+#    CC: gcc
+#    FC: gfortran
+#    MODE: serial
+#  steps:
+#  - template: .ci/azure/unix.yml
+
+- template: .ci/azure/unix.yml
+  parameters:
     OS_NAME: linux
     BUILD_SYSTEM: make
     BUILD_TYPE: Debug
     CC: gcc
     FC: gfortran
     MODE: serial
-  steps:
-  - template: .ci/azure/unix.yml
 
-- job: ubuntu_make_dmpar
-  pool:
-    vmImage: ubuntu-16.04
-  variables:
-    OS_NAME: linux
-    BUILD_SYSTEM: make
-    BUILD_TYPE: Debug
-    CC: gcc
-    FC: gfortran
-    MODE: dmpar
-  steps:
-  - template: .ci/azure/unix.yml
-
-- job: ubuntu_cmake_serial
-  pool:
-    vmImage: ubuntu-16.04
-  variables:
-    OS_NAME: linux
-    BUILD_SYSTEM: cmake
-    BUILD_TYPE: Debug
-    CC: gcc
-    FC: gfortran
-    MODE: serial
-    GRIB1: 0
-    GRIB2: 1
-    NESTING: basic
-  steps:
-  - template: .ci/azure/unix.yml
-
-- job: ubuntu_cmake_dmpar
-  pool:
-    vmImage: ubuntu-16.04
-  variables:
-    OS_NAME: linux
-    BUILD_SYSTEM: cmake
-    BUILD_TYPE: Debug
-    CC: gcc
-    FC: gfortran
-    MODE: dmpar
-    GRIB1: 0
-    GRIB2: 1
-    NESTING: basic
-  steps:
-  - template: .ci/azure/unix.yml
-
-- job: macos_make_serial
-  pool:
-    vmImage: macos-10.13
-  variables:
-    OS_NAME: osx
-    BUILD_SYSTEM: make
-    BUILD_TYPE: Debug
-    CC: gcc-8
-    FC: gfortran-8
-    MODE: serial
-  steps:
-  - template: .ci/azure/unix.yml
-
-- job: macos_make_dmpar
-  pool:
-    vmImage: macos-10.13
-  variables:
-    OS_NAME: osx
-    BUILD_SYSTEM: make
-    BUILD_TYPE: Debug
-    CC: gcc-8
-    FC: gfortran-8
-    MODE: dmpar
-  steps:
-  - template: .ci/azure/unix.yml
-
-- job: macos_cmake_serial
-  pool:
-    vmImage: macos-10.13
-  variables:
-    OS_NAME: osx
-    BUILD_SYSTEM: cmake
-    BUILD_TYPE: Debug
-    CC: gcc-8
-    FC: gfortran-8
-    MODE: serial
-    GRIB1: 0
-    GRIB2: 1
-    NESTING: basic
-  steps:
-  - template: .ci/azure/unix.yml
-
-- job: macos_cmake_dmpar
-  pool:
-    vmImage: macos-10.13
-  variables:
-    OS_NAME: osx
-    BUILD_SYSTEM: cmake
-    BUILD_TYPE: Debug
-    CC: gcc-8
-    FC: gfortran-8
-    MODE: dmpar
-    GRIB1: 0
-    GRIB2: 1
-    NESTING: basic
-  steps:
-  - template: .ci/azure/unix.yml
-
-- template: .ci/azure/wats_diff.yml
-  parameters:
-    OS_NAME_MAKE: linux
-    OS_NAME_CMAKE: linux
-    MODE: serial
-    BUILD_TYPE: Debug
-
-- template: .ci/azure/wats_diff.yml
-  parameters:
-    OS_NAME_MAKE: linux
-    OS_NAME_CMAKE: linux
-    MODE: dmpar
-    BUILD_TYPE: Debug
-
-- template: .ci/azure/wats_diff.yml
-  parameters:
-    OS_NAME_MAKE: osx
-    OS_NAME_CMAKE: osx
-    MODE: serial
-    BUILD_TYPE: Debug
-
-- template: .ci/azure/wats_diff.yml
-  parameters:
-    OS_NAME_MAKE: osx
-    OS_NAME_CMAKE: osx
-    MODE: dmpar
-    BUILD_TYPE: Debug
-
-- template: .ci/azure/wats_diff.yml
-  parameters:
-    OS_NAME_MAKE: linux
-    OS_NAME_CMAKE: windows
-    MODE: serial
-    BUILD_TYPE: Debug
-
-- template: .ci/azure/wats_diff.yml
-  parameters:
-    OS_NAME_MAKE: linux
-    OS_NAME_CMAKE: windows
-    MODE: dmpar
-    BUILD_TYPE: Debug
+#- job: linux_make_dmpar
+#  pool:
+#    vmImage: ubuntu-16.04
+#  variables:
+#    OS_NAME: linux
+#    BUILD_SYSTEM: make
+#    BUILD_TYPE: Debug
+#    CC: gcc
+#    FC: gfortran
+#    MODE: dmpar
+#  steps:
+#  - template: .ci/azure/unix.yml
+#
+#- job: linux_cmake_serial
+#  pool:
+#    vmImage: ubuntu-16.04
+#  variables:
+#    OS_NAME: linux
+#    BUILD_SYSTEM: cmake
+#    BUILD_TYPE: Debug
+#    CC: gcc
+#    FC: gfortran
+#    MODE: serial
+#    GRIB1: 0
+#    GRIB2: 1
+#    NESTING: basic
+#  steps:
+#  - template: .ci/azure/unix.yml
+#
+#- job: linux_cmake_dmpar
+#  pool:
+#    vmImage: ubuntu-16.04
+#  variables:
+#    OS_NAME: linux
+#    BUILD_SYSTEM: cmake
+#    BUILD_TYPE: Debug
+#    CC: gcc
+#    FC: gfortran
+#    MODE: dmpar
+#    GRIB1: 0
+#    GRIB2: 1
+#    NESTING: basic
+#  steps:
+#  - template: .ci/azure/unix.yml
+#
+#- job: macos_make_serial
+#  pool:
+#    vmImage: macos-10.13
+#  variables:
+#    OS_NAME: osx
+#    BUILD_SYSTEM: make
+#    BUILD_TYPE: Debug
+#    CC: gcc-8
+#    FC: gfortran-8
+#    MODE: serial
+#  steps:
+#  - template: .ci/azure/unix.yml
+#
+#- job: macos_make_dmpar
+#  pool:
+#    vmImage: macos-10.13
+#  variables:
+#    OS_NAME: osx
+#    BUILD_SYSTEM: make
+#    BUILD_TYPE: Debug
+#    CC: gcc-8
+#    FC: gfortran-8
+#    MODE: dmpar
+#  steps:
+#  - template: .ci/azure/unix.yml
+#
+#- job: macos_cmake_serial
+#  pool:
+#    vmImage: macos-10.13
+#  variables:
+#    OS_NAME: osx
+#    BUILD_SYSTEM: cmake
+#    BUILD_TYPE: Debug
+#    CC: gcc-8
+#    FC: gfortran-8
+#    MODE: serial
+#    GRIB1: 0
+#    GRIB2: 1
+#    NESTING: basic
+#  steps:
+#  - template: .ci/azure/unix.yml
+#
+#- job: macos_cmake_dmpar
+#  pool:
+#    vmImage: macos-10.13
+#  variables:
+#    OS_NAME: osx
+#    BUILD_SYSTEM: cmake
+#    BUILD_TYPE: Debug
+#    CC: gcc-8
+#    FC: gfortran-8
+#    MODE: dmpar
+#    GRIB1: 0
+#    GRIB2: 1
+#    NESTING: basic
+#  steps:
+#  - template: .ci/azure/unix.yml
+#
+#- template: .ci/azure/wats_diff.yml
+#  parameters:
+#    OS_NAME_MAKE: linux
+#    OS_NAME_CMAKE: linux
+#    MODE: serial
+#    BUILD_TYPE: Debug
+#
+#- template: .ci/azure/wats_diff.yml
+#  parameters:
+#    OS_NAME_MAKE: linux
+#    OS_NAME_CMAKE: linux
+#    MODE: dmpar
+#    BUILD_TYPE: Debug
+#
+#- template: .ci/azure/wats_diff.yml
+#  parameters:
+#    OS_NAME_MAKE: osx
+#    OS_NAME_CMAKE: osx
+#    MODE: serial
+#    BUILD_TYPE: Debug
+#
+#- template: .ci/azure/wats_diff.yml
+#  parameters:
+#    OS_NAME_MAKE: osx
+#    OS_NAME_CMAKE: osx
+#    MODE: dmpar
+#    BUILD_TYPE: Debug
+#
+#- template: .ci/azure/wats_diff.yml
+#  parameters:
+#    OS_NAME_MAKE: linux
+#    OS_NAME_CMAKE: windows
+#    MODE: serial
+#    BUILD_TYPE: Debug
+#
+#- template: .ci/azure/wats_diff.yml
+#  parameters:
+#    OS_NAME_MAKE: linux
+#    OS_NAME_CMAKE: windows
+#    MODE: dmpar
+#    BUILD_TYPE: Debug
       

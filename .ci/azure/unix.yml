@@ -1,62 +1,76 @@
-steps:
-- script: |
-    if [[ $OS_NAME == 'osx' ]]; then
-      sw_vers
-      top -l 1 -s 0 | grep PhysMem
-      sysctl hw
-      df -h
-    else
-      lsb_release -a
-      free -m
-      lscpu
-      df -h --total
-    fi
-  displayName: Dump VM specs
+jobs:
+- job: ${{ parameters.OS_NAME }}_${{ parameters.BUILD_SYSTEM }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
+  displayName: ${{ parameters.OS_NAME }} ${{ parameters.BUILD_SYSTEM }} [${{ parameters.BUILD_TYPE }}, ${{ parameters.MODE }}]
 
-- script: printenv
-  displayName: Dump environment variables
+  pool:
+    ${{ if eq(parameters.OS_NAME, 'linux') }}:
+      vmImage: ubuntu-16.04
+    ${{ if eq(parameters.OS_NAME, 'osx') }}:
+      vmImage: macos-10.13
 
-- script: |
-    set -e
-    cd ..
-    git clone --depth=100 --no-single-branch https://github.com/$WRF_REPO.git WRF
-    cd WRF
-    git checkout $WRF_COMMIT
-    git log --oneline -n 1
-  displayName: Download WRF
+  variables:
+    ${{ each pair in parameters }}:
+      ${{ pair.key }}: ${{ pair.value }}
 
-- script: ../WRF/.ci/azure/scripts/setup-dependencies.sh
-  displayName: Setup dependencies
+  steps:
+  - script: |
+      if [[ $OS_NAME == 'osx' ]]; then
+        sw_vers
+        top -l 1 -s 0 | grep PhysMem
+        sysctl hw
+        df -h
+      else
+        lsb_release -a
+        free -m
+        lscpu
+        df -h --total
+      fi
+    displayName: Dump VM specs
 
-- script: ../WRF/.ci/azure/scripts/install-wrf.sh
-  displayName: Install WRF
+  - script: printenv
+    displayName: Dump environment variables
 
-- script: .ci/azure/scripts/install-wps.sh
-  displayName: Install WPS
+  - script: |
+      set -e
+      cd ..
+      git clone --depth=100 --no-single-branch https://github.com/$WRF_REPO.git WRF
+      cd WRF
+      git checkout $WRF_COMMIT
+      git log --oneline -n 1
+    displayName: Download WRF
 
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.x'
+  - script: ../WRF/.ci/azure/scripts/setup-dependencies.sh
+    displayName: Setup dependencies
 
-- script: |
-    git clone --depth=1 --branch=$WATS_BRANCH https://github.com/$WATS_REPO.git wats
-    pip install -r wats/requirements.txt
-  displayName: Install WATS
+  - script: ../WRF/.ci/azure/scripts/install-wrf.sh
+    displayName: Install WRF
 
-- script: |
-    if [[ $MODE == dm* ]]; then mpi_flag=--mpi ; fi
-    if [[ $BUILD_SYSTEM == cmake ]]; then dir_suffix=build/install ; fi
-    python wats/wats/main.py run --mode $WATS_MODE --wrf-dir ../WRF/$dir_suffix --wps-dir ./$dir_suffix --work-dir wats_work $mpi_flag
-  displayName: Run WATS
+  - script: .ci/azure/scripts/install-wps.sh
+    displayName: Install WPS
 
-- task: PublishBuildArtifacts@1
-  displayName: Store WATS outputs
-  inputs:
-    pathtoPublish: wats_work/output
-    artifactName: wats_$(OS_NAME)_$(BUILD_SYSTEM)_$(BUILD_TYPE)_$(MODE)
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
 
-#- task: PublishPipelineArtifact@0
-#  displayName: Store WATS outputs
-#  inputs:
-#    artifactName: wats_$(OS_NAME)_$(BUILD_SYSTEM)_$(BUILD_TYPE)_$(MODE)
-#    targetPath: wats_work
+  - script: |
+      git clone --depth=1 --branch=$WATS_BRANCH https://github.com/$WATS_REPO.git wats
+      pip install -r wats/requirements.txt
+    displayName: Install WATS
+
+  - script: |
+      if [[ $MODE == dm* ]]; then mpi_flag=--mpi ; fi
+      if [[ $BUILD_SYSTEM == cmake ]]; then dir_suffix=build/install ; fi
+      python wats/wats/main.py run --mode $WATS_MODE --wrf-dir ../WRF/$dir_suffix --wps-dir ./$dir_suffix --work-dir wats_work $mpi_flag
+    displayName: Run WATS
+
+  - task: PublishBuildArtifacts@1
+    displayName: Store WATS outputs
+    inputs:
+      pathtoPublish: wats_work/output
+      artifactName: wats_$(OS_NAME)_$(BUILD_SYSTEM)_$(BUILD_TYPE)_$(MODE)
+
+  #- task: PublishPipelineArtifact@0
+  #  displayName: Store WATS outputs
+  #  inputs:
+  #    artifactName: wats_$(OS_NAME)_$(BUILD_SYSTEM)_$(BUILD_TYPE)_$(MODE)
+  #    targetPath: wats_work
