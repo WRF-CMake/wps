@@ -2,7 +2,10 @@
 
 # Copyright 2018 M. Riechert and D. Meyer. Licensed under the MIT License.
 
-set -e
+set -ex
+
+SCRIPTDIR=$(dirname "$0")
+cd $SCRIPTDIR/../../..
 
 if [ $BUILD_SYSTEM == "cmake" ]; then
 
