@@ -1,6 +1,6 @@
 jobs:
 - job: wats_diff_${{ parameters.OS_NAME_CMAKE }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
-  displayName: WATS ${{ parameters.OS_NAME_CMAKE }} [${{ parameters.BUILD_TYPE }}, ${{ parameters.MODE }}]
+  displayName: 'WATS ${{ parameters.OS_NAME_CMAKE }}: ${{ parameters.BUILD_TYPE }}, ${{ parameters.MODE }}
   
   pool:
     vmImage: ubuntu-16.04

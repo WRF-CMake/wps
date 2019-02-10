@@ -1,3 +1,5 @@
+name: WPS
+
 trigger:
 - wps-CMake
 

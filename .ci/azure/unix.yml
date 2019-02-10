@@ -1,6 +1,6 @@
 jobs:
 - job: ${{ parameters.OS_NAME }}_${{ parameters.BUILD_SYSTEM }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
-  displayName: ${{ parameters.OS_NAME }} ${{ parameters.BUILD_SYSTEM }} [${{ parameters.BUILD_TYPE }}, ${{ parameters.MODE }}]
+  displayName: '${{ parameters.OS_NAME }} ${{ parameters.BUILD_SYSTEM }}: ${{ parameters.BUILD_TYPE }}, ${{ parameters.MODE }}'
 
   pool:
     ${{ if eq(parameters.OS_NAME, 'Linux') }}:
@@ -48,4 +48,4 @@ jobs:
   - script: .ci/azure/scripts/install-wps.sh
     displayName: Install WPS
 
-  - template: .ci/azure/wats_run.yml
+  - template: wats_run.yml
