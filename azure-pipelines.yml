@@ -146,14 +146,14 @@ jobs:
 - template: .ci/azure/wats_diff.yml
   parameters:
     OS_NAME_MAKE: Linux
-    OS_NAME_CMAKE: windows
+    OS_NAME_CMAKE: Windows
     MODE: serial
     BUILD_TYPE: Debug
 
 - template: .ci/azure/wats_diff.yml
   parameters:
     OS_NAME_MAKE: Linux
-    OS_NAME_CMAKE: windows
+    OS_NAME_CMAKE: Windows
     MODE: dmpar
     BUILD_TYPE: Debug
       
