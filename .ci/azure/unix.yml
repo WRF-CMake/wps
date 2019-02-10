@@ -1,11 +1,12 @@
 steps:
 - script: |
     if [[ $OS_NAME == 'osx' ]]; then
+      sw_vers
       top -l 1 -s 0 | grep PhysMem
-      system_profiler | grep Processor
       sysctl hw
       df -h
     else
+      lsb_release -a
       free -m
       lscpu
       df -h --total
