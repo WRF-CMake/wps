@@ -23,9 +23,13 @@ steps:
     cd WRF
     git checkout $WRF_COMMIT
     git log --oneline -n 1
-    .ci/azure/scripts/setup-dependencies.sh
-    .ci/azure/scripts/install-wrf.sh
-  displayName: Install dependencies & WRF
+  displayName: Download WRF
+
+- script: ../WRF/.ci/azure/scripts/setup-dependencies.sh
+  displayName: Setup dependencies
+
+- script: ../WRF/.ci/azure/scripts/install-wrf.sh
+  displayName: Install WRF
 
 - script: .ci/azure/scripts/install-wps.sh
   displayName: Install WPS
@@ -45,9 +49,8 @@ steps:
     python wats/wats/main.py run --mode $WATS_MODE --wrf-dir ../WRF/$dir_suffix --wps-dir ./$dir_suffix --work-dir wats_work $mpi_flag
   displayName: Run WATS
 
-#- task: PublishPipelineArtifact@0
-#  displayName: Publish binaries
-#  condition: and(succeeded(), eq(variables.BUILD_SYSTEM, 'cmake'))
-#  inputs:
-#    artifactName: binaries_$(OS_NAME)_$(BUILD_SYSTEM)_$(BUILD_TYPE)_$(MODE)
-#    targetPath: build/install/main
+- task: PublishPipelineArtifact@0
+  displayName: Store WATS outputs
+  inputs:
+    artifactName: wats_$(OS_NAME)_$(BUILD_SYSTEM)_$(BUILD_TYPE)_$(MODE)
+    targetPath: wats_work

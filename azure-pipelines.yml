@@ -154,3 +154,27 @@ jobs:
     NESTING: basic
   steps:
   - template: .ci/azure/unix.yml
+
+- job: wats_diff
+  pool:
+    vmImage: ubuntu-16.04
+  dependsOn:
+  - windows_cmake_serial
+  #- windows_cmake_dmpar # failing currently
+  - ubuntu_make_serial
+  - ubuntu_make_dmpar
+  - ubuntu_cmake_serial
+  - ubuntu_cmake_dmpar
+  - macos_make_serial
+  - macos_make_dmpar
+  - macos_cmake_serial
+  - macos_cmake_dmpar
+  steps:
+  - task: DownloadPipelineArtifact@1
+    displayName: Retrieve WATS outputs
+    inputs:
+      downloadPath: wats_outputs
+  - script: |
+      cd wats_outputs
+      find . -type f
+    
