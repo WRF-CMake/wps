@@ -52,7 +52,7 @@ steps:
 - task: PublishBuildArtifacts@1
   displayName: Store WATS outputs
   inputs:
-    pathtoPublish: wats_work
+    pathtoPublish: wats_work/output
     artifactName: wats_$(OS_NAME)_$(BUILD_SYSTEM)_$(BUILD_TYPE)_$(MODE)
 
 #- task: PublishPipelineArtifact@0
