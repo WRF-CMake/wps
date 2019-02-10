@@ -1,70 +1,81 @@
-steps:
-- pwsh: |
-    Get-CimInstance Win32_Processor | Select-Object -Property [a-z]*
-    Get-CimInstance Win32_OperatingSystem | Select-Object -Property [a-z]*
-    Get-CimInstance Win32_LogicalDisk
-  displayName: Dump VM specs
+jobs:
+- job: ${{ parameters.OS_NAME }}_${{ parameters.BUILD_SYSTEM }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
+  displayName: ${{ parameters.OS_NAME }} ${{ parameters.BUILD_SYSTEM }} [${{ parameters.BUILD_TYPE }}, ${{ parameters.MODE }}]
 
-- script: set
-  displayName: Dump environment variables
+  pool:
+      vmImage: vs2017-win2016
 
-# We will install the latest version later on.
-- pwsh: |
-    $products = Get-CimInstance -ClassName Win32_Product -Filter "Name like 'Microsoft MPI%'"
-    foreach ($p in $products) {
-      echo "Uninstalling $($p.Name)"
-      Invoke-CimMethod -InputObject $p -MethodName Uninstall
-    }
-  condition: and(succeeded(), startsWith(variables.MODE, 'dm'))
-  displayName: Remove existing MSMPI
+  variables:
+    ${{ each pair in parameters }}:
+      ${{ pair.key }}: ${{ pair.value }}
 
-- script: |
-    choco install msys2 --params "/InstallDir:c:\msys64"
-  displayName: Install MSYS2
+  steps:
+  - pwsh: |
+      Get-CimInstance Win32_Processor | Select-Object -Property [a-z]*
+      Get-CimInstance Win32_OperatingSystem | Select-Object -Property [a-z]*
+      Get-CimInstance Win32_LogicalDisk
+    displayName: Dump VM specs
 
-- script: |
-    pushd ..
-    git clone --depth=100 --no-single-branch https://github.com/%WRF_REPO%.git WRF
-    cd WRF
-    git checkout %WRF_COMMIT%
-    git log --oneline -n 1
-  displayName: Download WRF
+  - script: set
+    displayName: Dump environment variables
 
-- task: BatchScript@1
-  displayName: Setup dependencies
-  inputs:
-    filename: ..\WRF\.ci\appveyor\setup-dependencies.bat
-    modifyEnvironment: true
+  # We will install the latest version later on.
+  - pwsh: |
+      $products = Get-CimInstance -ClassName Win32_Product -Filter "Name like 'Microsoft MPI%'"
+      foreach ($p in $products) {
+        echo "Uninstalling $($p.Name)"
+        Invoke-CimMethod -InputObject $p -MethodName Uninstall
+      }
+    condition: and(succeeded(), startsWith(variables.MODE, 'dm'))
+    displayName: Remove existing MSMPI
 
-- script: call ..\WRF\.ci\appveyor\install-wrf.bat
-  displayName: Install WRF
+  - script: |
+      choco install msys2 --params "/InstallDir:c:\msys64"
+    displayName: Install MSYS2
 
-- script: call .ci\appveyor\install-wps.bat
-  displayName: Install WPS
+  - script: |
+      pushd ..
+      git clone --depth=100 --no-single-branch https://github.com/%WRF_REPO%.git WRF
+      cd WRF
+      git checkout %WRF_COMMIT%
+      git log --oneline -n 1
+    displayName: Download WRF
 
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.x'
+  - task: BatchScript@1
+    displayName: Setup dependencies
+    inputs:
+      filename: ..\WRF\.ci\appveyor\setup-dependencies.bat
+      modifyEnvironment: true
 
-- script: |
-    git clone --depth=1 --branch=%WATS_BRANCH% https://github.com/%WATS_REPO%.git wats
-    pip install -r wats/requirements.txt
-  displayName: Install WATS
+  - script: call ..\WRF\.ci\appveyor\install-wrf.bat
+    displayName: Install WRF
 
-- pwsh: |
-    if ($Env:MODE.StartsWith("dm")) { $mpi_flag="--mpi" }
-    if ($Env:BUILD_SYSTEM -eq "cmake") { $dir_suffix="build/install" }
-    python wats/wats/main.py run --mode $Env:WATS_MODE --wrf-dir ../WRF/$dir_suffix --wps-dir ./$dir_suffix --work-dir wats_work $mpi_flag
-  displayName: Run WATS
+  - script: call .ci\appveyor\install-wps.bat
+    displayName: Install WPS
 
-- task: PublishBuildArtifacts@1
-  displayName: Store WATS outputs
-  inputs:
-    pathtoPublish: wats_work/output
-    artifactName: wats_$(OS_NAME)_$(BUILD_SYSTEM)_$(BUILD_TYPE)_$(MODE)
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
 
-#- task: PublishPipelineArtifact@0
-#  displayName: Store WATS outputs
-#  inputs:
-#    artifactName: wats_$(OS_NAME)_$(BUILD_SYSTEM)_$(BUILD_TYPE)_$(MODE)
-#    targetPath: wats_work
+  - script: |
+      git clone --depth=1 --branch=%WATS_BRANCH% https://github.com/%WATS_REPO%.git wats
+      pip install -r wats/requirements.txt
+    displayName: Install WATS
+
+  - pwsh: |
+      if ($Env:MODE.StartsWith("dm")) { $mpi_flag="--mpi" }
+      if ($Env:BUILD_SYSTEM -eq "CMake") { $dir_suffix="build/install" }
+      python wats/wats/main.py run --mode $Env:WATS_MODE --wrf-dir ../WRF/$dir_suffix --wps-dir ./$dir_suffix --work-dir wats_work $mpi_flag
+    displayName: Run WATS
+
+  - task: PublishBuildArtifacts@1
+    displayName: Store WATS outputs
+    inputs:
+      pathtoPublish: wats_work/output
+      artifactName: wats_$(OS_NAME)_$(BUILD_SYSTEM)_$(BUILD_TYPE)_$(MODE)
+
+  #- task: PublishPipelineArtifact@0
+  #  displayName: Store WATS outputs
+  #  inputs:
+  #    artifactName: wats_$(OS_NAME)_$(BUILD_SYSTEM)_$(BUILD_TYPE)_$(MODE)
+  #    targetPath: wats_work

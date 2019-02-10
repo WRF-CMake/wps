@@ -3,9 +3,9 @@ jobs:
   displayName: ${{ parameters.OS_NAME }} ${{ parameters.BUILD_SYSTEM }} [${{ parameters.BUILD_TYPE }}, ${{ parameters.MODE }}]
 
   pool:
-    ${{ if eq(parameters.OS_NAME, 'linux') }}:
+    ${{ if eq(parameters.OS_NAME, 'Linux') }}:
       vmImage: ubuntu-16.04
-    ${{ if eq(parameters.OS_NAME, 'osx') }}:
+    ${{ if eq(parameters.OS_NAME, 'macOS') }}:
       vmImage: macos-10.13
 
   variables:
@@ -14,7 +14,7 @@ jobs:
 
   steps:
   - script: |
-      if [[ $OS_NAME == 'osx' ]]; then
+      if [[ $OS_NAME == 'macOS' ]]; then
         sw_vers
         top -l 1 -s 0 | grep PhysMem
         sysctl hw
@@ -59,7 +59,7 @@ jobs:
 
   - script: |
       if [[ $MODE == dm* ]]; then mpi_flag=--mpi ; fi
-      if [[ $BUILD_SYSTEM == cmake ]]; then dir_suffix=build/install ; fi
+      if [[ $BUILD_SYSTEM == CMake ]]; then dir_suffix=build/install ; fi
       python wats/wats/main.py run --mode $WATS_MODE --wrf-dir ../WRF/$dir_suffix --wps-dir ./$dir_suffix --work-dir wats_work $mpi_flag
     displayName: Run WATS
 

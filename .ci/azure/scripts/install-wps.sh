@@ -7,7 +7,7 @@ set -ex
 SCRIPTDIR=$(dirname "$0")
 cd $SCRIPTDIR/../../..
 
-if [ $BUILD_SYSTEM == "cmake" ]; then
+if [ $BUILD_SYSTEM == "CMake" ]; then
 
     mkdir build && cd build
     cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=install -DWRF_DIR=../../WRF/build \
@@ -18,7 +18,7 @@ if [ $BUILD_SYSTEM == "cmake" ]; then
 
 elif [ $BUILD_SYSTEM == "make" ]; then
 
-    if [[ $OS_NAME == 'linux' ]]; then
+    if [[ $OS_NAME == 'Linux' ]]; then
 
         case $MODE in
             serial) cfg=1 ;;
@@ -38,7 +38,7 @@ elif [ $BUILD_SYSTEM == "make" ]; then
         export JASPERLIB="/usr/lib/x86_64-linux-gnu"
         export JASPERINC="/usr/include/jasper -I/usr/include"
 
-    elif [[ $OS_NAME == 'osx' ]]; then
+    elif [[ $OS_NAME == 'macOS' ]]; then
 
         case $MODE in
             serial) cfg=17 ;;
