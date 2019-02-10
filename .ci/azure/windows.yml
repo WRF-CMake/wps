@@ -28,9 +28,16 @@ steps:
     cd WRF
     git checkout %WRF_COMMIT%
     git log --oneline -n 1
-    call .ci\appveyor\setup-dependencies.bat || exit /b 1
-    call .ci\appveyor\install-wrf.bat
-  displayName: Install dependencies & WRF
+  displayName: Download WRF
+
+- task: BatchScript@1
+  displayName: Setup dependencies
+  inputs:
+    filename: ..\WRF\.ci\appveyor\setup-dependencies.bat
+    modifyEnvironment: true
+
+- script: call ..\WRF\.ci\appveyor\install-wrf.bat
+  displayName: Install WRF
 
 - script: call .ci\appveyor\install-wps.bat
   displayName: Install WPS
