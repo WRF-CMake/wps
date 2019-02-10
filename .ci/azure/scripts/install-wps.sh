@@ -56,6 +56,10 @@ elif [ $BUILD_SYSTEM == "make" ]; then
     echo "./configure <<< $cfg\n"
     ./configure <<< $cfg$'\n'
 
+    echo "==== configure.wps ===="
+    cat configure.wps
+    echo "==== end configure.wps ===="
+
     echo "./compile"
     ./compile
 

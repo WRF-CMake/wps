@@ -196,12 +196,14 @@ EOF
     # Detecting whether if mpi compiler wrapper supports -cc/-f90 options
     mpicc -cc=$SCC -o ${foo} ${foo}.c > /dev/null 2>&1
     if [ $? != 0 ]; then
+      echo "mpicc does not support -cc, removing argument"
       sed 's/-cc=$(SCC)//' configure.wps > configure.wps.edit
       mv configure.wps.edit configure.wps
     fi
     rm ${foo} ${foo}.o 2> /dev/null
     mpif90 -f90=$SFC -o ${foo} ${foo}.f > /dev/null 2>&1
     if [ $? != 0 ]; then
+      echo "mpif90 does not support -f90, removing argument"
       sed 's/-f90=$(SFC)//'  configure.wps > configure.wps.edit
       mv configure.wps.edit configure.wps
     fi
