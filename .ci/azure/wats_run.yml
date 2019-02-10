@@ -1,0 +1,27 @@
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'
+
+- pwsh: |
+    git clone --depth=1 --branch=$Env:WATS_BRANCH https://github.com/$Env:WATS_REPO.git wats
+    pip install -r wats/requirements.txt
+  displayName: Install WATS
+
+- pwsh: |
+    if ($Env:MODE.StartsWith("dm")) { $mpi_flag="--mpi" }
+    if ($Env:BUILD_SYSTEM -eq "CMake") { $dir_suffix="build/install" }
+    python wats/wats/main.py run --mode $Env:WATS_MODE --wrf-dir ../WRF/$dir_suffix --wps-dir ./$dir_suffix --work-dir wats_work $mpi_flag
+  displayName: Run WATS
+
+- task: PublishBuildArtifacts@1
+  displayName: Store WATS outputs
+  inputs:
+    pathtoPublish: wats_work/output
+    artifactName: wats_$(OS_NAME)_$(BUILD_SYSTEM)_$(BUILD_TYPE)_$(MODE)
+
+#- task: PublishPipelineArtifact@0
+#  displayName: Store WATS outputs
+#  inputs:
+#    artifactName: wats_$(OS_NAME)_$(BUILD_SYSTEM)_$(BUILD_TYPE)_$(MODE)
+#    targetPath: wats_work

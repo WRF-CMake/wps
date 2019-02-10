@@ -16,7 +16,7 @@ if [ $BUILD_SYSTEM == "CMake" ]; then
     cmake --build . --target install -- -j2
     cd ..
 
-elif [ $BUILD_SYSTEM == "make" ]; then
+elif [ $BUILD_SYSTEM == "Make" ]; then
 
     if [[ $OS_NAME == 'Linux' ]]; then
 
