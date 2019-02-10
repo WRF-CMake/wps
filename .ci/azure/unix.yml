@@ -49,8 +49,14 @@ steps:
     python wats/wats/main.py run --mode $WATS_MODE --wrf-dir ../WRF/$dir_suffix --wps-dir ./$dir_suffix --work-dir wats_work $mpi_flag
   displayName: Run WATS
 
-- task: PublishPipelineArtifact@0
+- task: PublishBuildArtifacts@1
   displayName: Store WATS outputs
   inputs:
+    pathtoPublish: wats_work
     artifactName: wats_$(OS_NAME)_$(BUILD_SYSTEM)_$(BUILD_TYPE)_$(MODE)
-    targetPath: wats_work
+
+#- task: PublishPipelineArtifact@0
+#  displayName: Store WATS outputs
+#  inputs:
+#    artifactName: wats_$(OS_NAME)_$(BUILD_SYSTEM)_$(BUILD_TYPE)_$(MODE)
+#    targetPath: wats_work

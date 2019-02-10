@@ -170,11 +170,15 @@ jobs:
   - macos_cmake_serial
   - macos_cmake_dmpar
   steps:
-  - task: DownloadPipelineArtifact@1
+  #- task: DownloadPipelineArtifact@1
+  #  displayName: Retrieve WATS outputs
+  #  inputs:
+  #    downloadPath: wats_outputs
+  - task: DownloadBuildArtifacts@0
     displayName: Retrieve WATS outputs
     inputs:
       downloadPath: wats_outputs
+      downloadType: specific
   - script: |
       cd wats_outputs
       find . -type f
-    
