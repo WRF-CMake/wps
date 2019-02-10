@@ -28,7 +28,7 @@ steps:
     cd WRF
     git checkout %WRF_COMMIT%
     git log --oneline -n 1
-    call .ci\appveyor\setup-dependencies.bat
+    call .ci\appveyor\setup-dependencies.bat || exit /b 1
     call .ci\appveyor\install-wrf.bat
   displayName: Install dependencies & WRF
 
