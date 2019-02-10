@@ -194,6 +194,7 @@ EOF
   # do not do this test for MIC, which cross compiles
   if [ -z "`grep 'SCC.*mmic' configure.wps`" ] ; then
     # Detecting whether if mpi compiler wrapper supports -cc/-f90 options
+    echo "Checking whether mpicc/mpif90 support -cc/-f90"
     mpicc -cc=$SCC -o ${foo} ${foo}.c > /dev/null 2>&1
     if [ $? != 0 ]; then
       echo "mpicc does not support -cc, removing argument"
