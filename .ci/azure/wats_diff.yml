@@ -6,8 +6,8 @@ jobs:
     vmImage: ubuntu-16.04
   
   dependsOn:
-  - ${{ parameters.OS_NAME_MAKE }}_make_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
-  - ${{ parameters.OS_NAME_CMAKE }}_cmake_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
+  - ${{ parameters.OS_NAME_MAKE }}_Make_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
+  - ${{ parameters.OS_NAME_CMAKE }}_CMake_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
   
   steps:
   - checkout: none
@@ -22,14 +22,14 @@ jobs:
     inputs:
       downloadPath: wats_outputs
       downloadType: specific
-      itemPattern: 'wats_${{ parameters.OS_NAME_MAKE }}_make_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}/**'
+      itemPattern: 'wats_${{ parameters.OS_NAME_MAKE }}_Make_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}/**'
   
   - task: DownloadBuildArtifacts@0
     displayName: Retrieve CMake WATS outputs
     inputs:
       downloadPath: wats_outputs
       downloadType: specific
-      itemPattern: 'wats_${{ parameters.OS_NAME_CMAKE }}_cmake_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}/**'
+      itemPattern: 'wats_${{ parameters.OS_NAME_CMAKE }}_CMake_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}/**'
   
   - script: |
       cd wats_outputs
@@ -49,6 +49,6 @@ jobs:
       set -ex
       O=wats_outputs
       W="python wats/wats/main.py diff --mode $WATS_MODE"
-      $W $O/wats_${{ parameters.OS_NAME_MAKE }}_make_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }} $O/wats_${{ parameters.OS_NAME_CMAKE }}_cmake_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
+      $W $O/wats_${{ parameters.OS_NAME_MAKE }}_Make_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }} $O/wats_${{ parameters.OS_NAME_CMAKE }}_CMake_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
     displayName: Run WATS diff
       
