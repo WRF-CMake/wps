@@ -1,5 +1,5 @@
 trigger:
-- wps-CMake
+- wps-cmake
 
 variables:
   WRF_REPO: WRF-CMake/WRF
@@ -9,26 +9,6 @@ variables:
   WATS_MODE: wps
 
 jobs:
-- template: .ci/azure/windows.yml
-  parameters:
-    OS_NAME: Windows
-    BUILD_SYSTEM: CMake
-    BUILD_TYPE: Debug
-    MODE: serial
-    GRIB1: 0
-    GRIB2: 1
-    NESTING: basic
-
-- template: .ci/azure/windows.yml
-  parameters:
-    OS_NAME: Windows
-    BUILD_SYSTEM: CMake
-    BUILD_TYPE: Debug
-    MODE: dmpar
-    GRIB1: 0
-    GRIB2: 1
-    NESTING: basic
-
 # TODO CC/FC are not used for Make builds
 
 - template: .ci/azure/unix.yml
@@ -110,6 +90,26 @@ jobs:
     BUILD_TYPE: Debug
     CC: gcc-8
     FC: gfortran-8
+    MODE: dmpar
+    GRIB1: 0
+    GRIB2: 1
+    NESTING: basic
+
+- template: .ci/azure/windows.yml
+  parameters:
+    OS_NAME: Windows
+    BUILD_SYSTEM: CMake
+    BUILD_TYPE: Debug
+    MODE: serial
+    GRIB1: 0
+    GRIB2: 1
+    NESTING: basic
+
+- template: .ci/azure/windows.yml
+  parameters:
+    OS_NAME: Windows
+    BUILD_SYSTEM: CMake
+    BUILD_TYPE: Debug
     MODE: dmpar
     GRIB1: 0
     GRIB2: 1

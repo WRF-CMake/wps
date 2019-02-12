@@ -19,9 +19,3 @@ steps:
   inputs:
     pathtoPublish: wats_work/output
     artifactName: wats_$(OS_NAME)_$(BUILD_SYSTEM)_$(BUILD_TYPE)_$(MODE)
-
-#- task: PublishPipelineArtifact@0
-#  displayName: Store WATS outputs
-#  inputs:
-#    artifactName: wats_$(OS_NAME)_$(BUILD_SYSTEM)_$(BUILD_TYPE)_$(MODE)
-#    targetPath: wats_work

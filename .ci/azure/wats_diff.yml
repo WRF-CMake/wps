@@ -12,11 +12,6 @@ jobs:
   steps:
   - checkout: none
   
-  #- task: DownloadPipelineArtifact@1
-  #  displayName: Retrieve WATS outputs
-  #  inputs:
-  #    downloadPath: wats_outputs
-
   - task: DownloadBuildArtifacts@0
     displayName: Retrieve Make WATS outputs
     inputs:
