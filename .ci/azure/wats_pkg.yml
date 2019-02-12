@@ -1,5 +1,5 @@
 jobs:
-- template: .ci/azure/unix.yml
+- template: unix.yml
 
 - job: publish_wats_pkg
   displayName: Publish WATS Package
