@@ -9,14 +9,11 @@ env:
     - WPS_REPO=$TRAVIS_REPO_SLUG
     - WRF_COMMIT=wrf-cmake
     - WPS_COMMIT=$TRAVIS_COMMIT
-    - WATS_REPO=WRF-CMake/wats
-    - WATS_BRANCH=master
-    - WATS_DATA_REPO=WRF-CMake/wats-data
-    - WATS_MODE=wps
 
 jobs:
   include:
-    # Make reference build (WATS)
+    # Make builds
+
     - stage: build
       os: linux
       dist: trusty
@@ -27,7 +24,6 @@ jobs:
         - FC=gfortran
         - MODE=serial
 
-    # Make reference build (WATS)
     - stage: build
       os: linux
       dist: trusty
@@ -38,7 +34,6 @@ jobs:
         - FC=gfortran
         - MODE=dmpar
 
-    # Make reference build (WATS)
     - stage: build
       os: osx
       osx_image: xcode9.2 # https://github.com/travis-ci/travis-ci/issues/9640
@@ -50,7 +45,6 @@ jobs:
         - FC=gfortran-8
         - MODE=serial
 
-    # Make reference build (WATS)
     - stage: build
       os: osx
       osx_image: xcode9.2 # https://github.com/travis-ci/travis-ci/issues/9640
@@ -61,6 +55,8 @@ jobs:
         - CC=gcc-8 # GNU via Homebrew
         - FC=gfortran-8
         - MODE=dmpar
+
+    # CMake builds
 
     - stage: build
       os: linux
@@ -118,18 +114,6 @@ jobs:
         - MODE=dmpar
         - NESTING=basic
 
-    - stage: wats
-      # Currently, WATS is only supported for branch builds since
-      # pull requests (from forks) cannot access the necessary secrets.
-      if: type != pull_request
-      os: linux
-      before_install: skip
-      install:
-        - git clone --depth=1 --branch=$WATS_BRANCH https://github.com/$WATS_REPO.git wats
-      script:
-        - wats/.ci/travis/trigger-wats-travis.sh
-        - wats/.ci/travis/trigger-wats-appveyor.sh
-
 before_install:
   - pushd ..
   - git clone --depth=100 --no-single-branch https://github.com/$WRF_REPO.git WRF
@@ -143,24 +127,3 @@ install:
   - .ci/travis/install-wps.sh
 
 script: skip
-
-before_deploy:
-  - .ci/travis/install-python3.sh
-  - cd ..
-  - git clone --depth=1 --branch=$WATS_BRANCH https://github.com/$WATS_REPO.git wats
-  - pip3 install -r wats/requirements.txt
-  - if [[ $MODE == dm* ]]; then export MPI_FLAG=--mpi ; fi
-  - python3 wats/wats/main.py run --mode $WATS_MODE --wrf-dir WRF --wps-dir WPS --work-dir wats_work $MPI_FLAG
-  - pip3 install -r wats/.ci/travis/requirements.txt
-  - python3 wats/.ci/travis/cleanup-wats-data.py
-
-deploy:
-  provider: pages
-  github-token: $GITHUB_TOKEN
-  skip-cleanup: true
-  local-dir: ../wats_work/output
-  repo: $WATS_DATA_REPO
-  target-branch: $TRAVIS_REPO_SLUG-$TRAVIS_BUILD_NUMBER-$TRAVIS_OS_NAME-$MODE
-  on:
-    all_branches: true
-    condition: $SYSTEM = make
