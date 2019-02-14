@@ -8,6 +8,7 @@ environment:
   global:
     WRF_REPO: WRF-CMake/WRF
     WRF_COMMIT: wrf-cmake
+    BUILD_SYSTEM: CMake
 
   matrix:
     - BUILD_TYPE: Debug

@@ -4,7 +4,7 @@
 
 set -e
 
-if [ $SYSTEM == "cmake" ]; then
+if [ $BUILD_SYSTEM == "CMake" ]; then
 
     mkdir build && cd build
     cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=install -DWRF_DIR=../../WRF/build \
@@ -13,7 +13,7 @@ if [ $SYSTEM == "cmake" ]; then
     cmake --build . --target install -- -j2
     cd ..
 
-elif [ $SYSTEM == "make" ]; then
+elif [ $BUILD_SYSTEM == "Make" ]; then
 
     if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
 
@@ -67,6 +67,6 @@ elif [ $SYSTEM == "make" ]; then
     fi
 
 else
-    echo "Unknown system: ${system}"
+    echo "Unknown system: ${BUILD_SYSTEM}"
     exit 1
 fi

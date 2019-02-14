@@ -32,14 +32,16 @@ jobs:
     - ${{ each MODE in parameters.MODES }}:
       
       - ${{ each BUILD_SYSTEM in parameters.BUILD_SYSTEMS }}:
-        - template: ${{ parameters.templates[OS_NAME] }}
-          parameters:
-            OS_NAME: ${{ OS_NAME }}
-            BUILD_SYSTEM: ${{ BUILD_SYSTEM }}
-            BUILD_TYPE: ${{ BUILD_TYPE }}
-            MODE: ${{ MODE }}
-            ${{ insert }}: ${{ parameters[OS_NAME] }}
-            ${{ insert }}: ${{ parameters.universal }}
+        # For Windows, since there is no Make-based build, skip that combination.
+        - ${{ if not(and(eq(OS_NAME, 'Windows'), eq(BUILD_SYSTEM, 'Make'))) }}:
+          - template: ${{ parameters.templates[OS_NAME] }}
+            parameters:
+              OS_NAME: ${{ OS_NAME }}
+              BUILD_SYSTEM: ${{ BUILD_SYSTEM }}
+              BUILD_TYPE: ${{ BUILD_TYPE }}
+              MODE: ${{ MODE }}
+              ${{ insert }}: ${{ parameters[OS_NAME] }}
+              ${{ insert }}: ${{ parameters.universal }}
           
       - template: wats_diff.yml
         parameters:
