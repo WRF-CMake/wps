@@ -44,9 +44,9 @@ jobs:
       - template: wats_diff.yml
         parameters:
           # For Windows, since there is no Make-based reference, compare against Linux.
-          ${{ if eq(parameters.OS_NAME, 'Windows') }}:
+          ${{ if eq(OS_NAME, 'Windows') }}:
             OS_NAME_MAKE: Linux
-          ${{ if ne(parameters.OS_NAME, 'Windows') }}:
+          ${{ if ne(OS_NAME, 'Windows') }}:
             OS_NAME_MAKE: ${{ OS_NAME }}
           OS_NAME_CMAKE: ${{ OS_NAME }}
           BUILD_TYPE: ${{ BUILD_TYPE }}
