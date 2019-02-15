@@ -7,7 +7,7 @@ clone_depth: 50
 environment:
   global:
     WRF_REPO: WRF-CMake/WRF
-    WRF_COMMIT: wrf-cmake
+    WRF_COMMIT: letmaik/azure-pipelines
     BUILD_SYSTEM: CMake
 
   matrix:
