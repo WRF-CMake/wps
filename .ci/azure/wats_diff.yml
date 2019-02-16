@@ -1,30 +1,30 @@
 jobs:
-- job: wats_diff_${{ parameters.OS_NAME_CMAKE }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
-  displayName: 'WATS ${{ parameters.OS_NAME_CMAKE }}: ${{ parameters.BUILD_TYPE }}, ${{ parameters.MODE }}'
+- job: wats_diff_${{ parameters.OS_NAME_LEFT }}_${{ parameters.OS_NAME_RIGHT }}_${{ parameters.BUILD_SYSTEM_LEFT }}_${{ parameters.BUILD_SYSTEM_RIGHT }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
+  displayName: 'WATS ${{ parameters.OS_NAME_LEFT }}/${{ parameters.OS_NAME_RIGHT }} ${{ parameters.BUILD_SYSTEM_LEFT }}/${{ parameters.BUILD_SYSTEM_RIGHT }}: ${{ parameters.BUILD_TYPE }}, ${{ parameters.MODE }}'
   
   pool:
     vmImage: ubuntu-16.04
   
   dependsOn:
-  - ${{ parameters.OS_NAME_MAKE }}_Make_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
-  - ${{ parameters.OS_NAME_CMAKE }}_CMake_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
+  - ${{ parameters.OS_NAME_LEFT }}_${{ parameters.BUILD_SYSTEM_LEFT }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
+  - ${{ parameters.OS_NAME_RIGHT }}_${{ parameters.BUILD_SYSTEM_RIGHT }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
   
   steps:
   - checkout: none
   
   - task: DownloadBuildArtifacts@0
-    displayName: Retrieve Make WATS outputs
+    displayName: Retrieve ${{ parameters.OS_NAME_LEFT }} ${{ parameters.BUILD_SYSTEM_LEFT }} WATS outputs
     inputs:
       downloadPath: wats_outputs
       downloadType: specific
-      itemPattern: 'wats_${{ parameters.OS_NAME_MAKE }}_Make_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}/**'
+      itemPattern: 'wats_${{ parameters.OS_NAME_LEFT }}_${{ parameters.BUILD_SYSTEM_LEFT }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}/**'
   
   - task: DownloadBuildArtifacts@0
-    displayName: Retrieve CMake WATS outputs
+    displayName: Retrieve ${{ parameters.OS_NAME_RIGHT }} ${{ parameters.BUILD_SYSTEM_RIGHT }} WATS outputs
     inputs:
       downloadPath: wats_outputs
       downloadType: specific
-      itemPattern: 'wats_${{ parameters.OS_NAME_CMAKE }}_CMake_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}/**'
+      itemPattern: 'wats_${{ parameters.OS_NAME_RIGHT }}_${{ parameters.BUILD_SYSTEM_RIGHT }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}/**'
   
   - script: |
       cd wats_outputs
@@ -44,6 +44,6 @@ jobs:
       set -ex
       O=wats_outputs
       W="python wats/wats/main.py diff --mode $WATS_MODE"
-      $W $O/wats_${{ parameters.OS_NAME_MAKE }}_Make_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }} $O/wats_${{ parameters.OS_NAME_CMAKE }}_CMake_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
+      $W $O/wats_${{ parameters.OS_NAME_LEFT }}_${{ parameters.BUILD_SYSTEM_LEFT }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }} $O/wats_${{ parameters.OS_NAME_RIGHT }}_${{ parameters.BUILD_SYSTEM_RIGHT }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
     displayName: Run WATS diff
       

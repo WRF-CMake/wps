@@ -43,13 +43,28 @@ jobs:
               ${{ insert }}: ${{ parameters[OS_NAME] }}
               ${{ insert }}: ${{ parameters.universal }}
           
+      # Make vs CMake comparison
       - template: wats_diff.yml
         parameters:
           # For Windows, since there is no Make-based reference, compare against Linux.
           ${{ if eq(OS_NAME, 'Windows') }}:
-            OS_NAME_MAKE: Linux
+            OS_NAME_LEFT: Linux
           ${{ if ne(OS_NAME, 'Windows') }}:
-            OS_NAME_MAKE: ${{ OS_NAME }}
-          OS_NAME_CMAKE: ${{ OS_NAME }}
+            OS_NAME_LEFT: ${{ OS_NAME }}
+          OS_NAME_RIGHT: ${{ OS_NAME }}
+          BUILD_SYSTEM_LEFT: Make
+          BUILD_SYSTEM_RIGHT: CMake
           BUILD_TYPE: ${{ BUILD_TYPE }}
           MODE: ${{ MODE }}
+
+# Make vs Make comparison
+- ${{ each BUILD_TYPE in parameters.BUILD_TYPES }}:
+  - ${{ each MODE in parameters.MODES }}:
+    - template: wats_diff.yml
+      parameters:
+        OS_NAME_LEFT: Linux
+        OS_NAME_RIGHT: macOS
+        BUILD_SYSTEM_LEFT: Make
+        BUILD_SYSTEM_RIGHT: Make
+        BUILD_TYPE: ${{ BUILD_TYPE }}
+        MODE: ${{ MODE }}
