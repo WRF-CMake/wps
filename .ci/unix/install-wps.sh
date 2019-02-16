@@ -5,7 +5,7 @@
 set -ex
 
 SCRIPTDIR=$(dirname "$0")
-cd $SCRIPTDIR/../../..
+cd $SCRIPTDIR/../..
 
 if [ $BUILD_SYSTEM == "CMake" ]; then
 
@@ -18,7 +18,7 @@ if [ $BUILD_SYSTEM == "CMake" ]; then
 
 elif [ $BUILD_SYSTEM == "Make" ]; then
 
-    if [[ $OS_NAME == 'Linux' ]]; then
+    if [ "$(uname)" == "Linux" ]; then
 
         case $MODE in
             serial) cfg=1 ;;
@@ -26,19 +26,23 @@ elif [ $BUILD_SYSTEM == "Make" ]; then
             *) echo "Invalid: $MODE" ;;
         esac
 
-        # Need to create symlinked folder hierarchy that WRF expects...
-        mkdir netcdf
-        ln -s /usr/include netcdf/include
-        ln -s /usr/lib/x86_64-linux-gnu netcdf/lib
+        if [ "$(lsb_release -c -s)" == "trusty" ]; then
+            export NETCDF=/usr
+        else
+            # Need to create symlinked folder hierarchy that WRF expects...
+            mkdir netcdf
+            ln -s /usr/include netcdf/include
+            ln -s /usr/lib/x86_64-linux-gnu netcdf/lib
 
-        export NETCDF=`pwd`/netcdf
+            export NETCDF=`pwd`/netcdf
+        fi
 
         ## As the zlib and PNG libraries are not in a standard path that will be checked automatically by the compiler,
         ## we include them with the JASPER include and library path
         export JASPERLIB="/usr/lib/x86_64-linux-gnu"
         export JASPERINC="/usr/include/jasper -I/usr/include"
 
-    elif [[ $OS_NAME == 'macOS' ]]; then
+    elif [ "$(uname)" == "Darwin" ]; then
 
         case $MODE in
             serial) cfg=17 ;;
@@ -54,6 +58,7 @@ elif [ $BUILD_SYSTEM == "Make" ]; then
 
     else
         echo "The environment is not recognised"
+        exit 1
     fi
 
     echo "./configure <<< $cfg\n"
@@ -79,6 +84,6 @@ elif [ $BUILD_SYSTEM == "Make" ]; then
     fi
 
 else
-    echo "Unknown system: ${system}"
+    echo "Unknown system: $(uname)"
     exit 1
 fi

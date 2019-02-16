@@ -28,13 +28,14 @@ environment:
       GRIB2: 1
 
 install:
+  - ps: .ci\windows\dump-vm-specs.ps1
   - cd ..
   - git clone --depth=100 --no-single-branch https://github.com/%WRF_REPO%.git WRF
   - cd WRF
   - git checkout %WRF_COMMIT%
-  - call .ci\appveyor\setup-dependencies.bat
-  - call .ci\appveyor\install-wrf.bat
+  - call .ci\windows\setup-dependencies.bat
+  - call .ci\windows\install-wrf.bat
   - cd %APPVEYOR_BUILD_FOLDER%
 
 build_script:
-  - call .ci\appveyor\install-wps.bat
+  - call .ci\windows\install-wps.bat

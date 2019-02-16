@@ -15,18 +15,7 @@ jobs:
       ${{ pair.key }}: ${{ pair.value }}
 
   steps:
-  - script: |
-      if [[ $OS_NAME == 'macOS' ]]; then
-        sw_vers
-        top -l 1 -s 0 | grep PhysMem
-        sysctl hw
-        df -h
-      else
-        lsb_release -a
-        free -m
-        lscpu
-        df -h --total
-      fi
+  - script: .ci/unix/dump-vm-specs.sh
     displayName: Dump VM specs
 
   - script: printenv

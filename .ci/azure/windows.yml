@@ -12,10 +12,7 @@ jobs:
       ${{ pair.key }}: ${{ pair.value }}
 
   steps:
-  - pwsh: |
-      Get-CimInstance Win32_Processor | Select-Object -Property [a-z]*
-      Get-CimInstance Win32_OperatingSystem | Select-Object -Property [a-z]*
-      Get-CimInstance Win32_LogicalDisk
+  - pwsh: .ci\windows\dump-vm-specs.ps1
     displayName: Dump VM specs
 
   - script: set
@@ -46,13 +43,13 @@ jobs:
   - task: BatchScript@1
     displayName: Setup dependencies
     inputs:
-      filename: ..\WRF\.ci\appveyor\setup-dependencies.bat
+      filename: ..\WRF\.ci\windows\setup-dependencies.bat
       modifyEnvironment: true
 
-  - script: call ..\WRF\.ci\appveyor\install-wrf.bat
+  - script: call ..\WRF\.ci\windows\install-wrf.bat
     displayName: Install WRF
 
-  - script: call .ci\appveyor\install-wps.bat
+  - script: call .ci\windows\install-wps.bat
     displayName: Install WPS
 
   - template: wats_run.yml
