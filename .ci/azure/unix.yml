@@ -30,13 +30,13 @@ jobs:
       git log --oneline -n 1
     displayName: Download WRF
 
-  - script: ../WRF/.ci/azure/scripts/setup-dependencies.sh
+  - script: ../WRF/.ci/unix/setup-dependencies.sh
     displayName: Setup dependencies
 
-  - script: ../WRF/.ci/azure/scripts/install-wrf.sh
+  - script: ../WRF/.ci/unix/install-wrf.sh
     displayName: Install WRF
 
-  - script: .ci/azure/scripts/install-wps.sh
+  - script: .ci/unix/install-wps.sh
     displayName: Install WPS
 
   - template: wats_run.yml
