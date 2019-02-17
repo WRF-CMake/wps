@@ -83,7 +83,7 @@ jobs:
         - FC=gfortran
         - GRIB1=1
         - GRIB2=0
-        - MODE=dm+sm
+        - MODE=dm_sm
         - NESTING=basic
 
     - stage: build

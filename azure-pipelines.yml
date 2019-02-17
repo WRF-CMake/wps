@@ -1,12 +1,8 @@
 trigger:
 - wps-cmake
 
-variables:
-  WRF_REPO: WRF-CMake/WRF
-  WRF_COMMIT: letmaik/azure-pipelines
-  WATS_REPO: WRF-CMake/wats
-  WATS_BRANCH: master
-  WATS_MODE: wps
-
 jobs:
 - template: .ci/azure/matrix.yml
+  parameters:
+    BUILD_TYPES: [Debug]
+    MODES: [dm_sm]

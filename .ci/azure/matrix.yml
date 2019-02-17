@@ -16,15 +16,21 @@ parameters:
     FC: gfortran
   
   universal:
+    WRF_REPO: WRF-CMake/WRF
+    WRF_COMMIT: letmaik/azure-pipelines
+    WATS_REPO: WRF-CMake/wats
+    WATS_BRANCH: master
+    WATS_MODE: wps
     NESTING: basic
     GRIB1: 0
     GRIB2: 1
   
-  # loop/matrix parameters
-  OS_NAMES: [Linux, macOS, Windows]
+  # Loop/matrix parameters.
+  # Note that these may be overridden by the including yml (typically azure-pipelines.yml).
+  OS_NAMES: [Windows, Linux, macOS]
   BUILD_SYSTEMS: [Make, CMake]
   BUILD_TYPES: [Debug, Release]
-  MODES: [serial, dmpar]
+  MODES: [serial, smpar, dmpar, dm_sm]
 
 jobs:
 - ${{ each OS_NAME in parameters.OS_NAMES }}:
