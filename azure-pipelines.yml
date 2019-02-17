@@ -2,7 +2,7 @@ trigger:
 - wps-cmake
 
 jobs:
-- template: .ci/azure/matrix.yml
+- template: .ci/azure-pipelines/matrix.yml
   parameters:
     BUILD_TYPES: [Debug]
     MODES: [dm_sm]
