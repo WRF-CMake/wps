@@ -18,6 +18,15 @@ if [ $BUILD_SYSTEM == "CMake" ]; then
 
 elif [ $BUILD_SYSTEM == "Make" ]; then
 
+    # See install-wrf.sh in WRF repository.
+    export PATH=$(pwd)/../WRF/compilers:$PATH
+
+    # WRF does not use CC/FC, so let's check what gcc/gfortran actually points to.
+    which gcc
+    gcc --version
+    which gfortran
+    gfortran --version
+
     if [ "$(uname)" == "Linux" ]; then
 
         case $MODE in
