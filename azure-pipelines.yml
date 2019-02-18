@@ -5,4 +5,4 @@ jobs:
 - template: .ci/azure-pipelines/matrix.yml
   parameters:
     BUILD_TYPES: [Debug]
-    MODES: [dm_sm]
+    MODES: [dmpar]

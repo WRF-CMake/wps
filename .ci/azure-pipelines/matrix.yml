@@ -30,7 +30,8 @@ parameters:
   OS_NAMES: [Windows, Linux, macOS]
   BUILD_SYSTEMS: [Make, CMake]
   BUILD_TYPES: [Debug, Release]
-  MODES: [serial, smpar, dmpar, dm_sm]
+  # WPS in the Make variant does not support smpar out of the box, so ignore here.
+  MODES: [serial, dmpar]
 
 jobs:
 - ${{ each OS_NAME in parameters.OS_NAMES }}:

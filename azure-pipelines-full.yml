@@ -6,4 +6,4 @@ jobs:
 - template: .ci/azure-pipelines/matrix.yml
   parameters:
     BUILD_TYPES: [Debug, Release]
-    MODES: [serial, smpar, dmpar, dm_sm]
+    MODES: [serial, dmpar]
