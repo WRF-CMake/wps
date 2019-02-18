@@ -9,6 +9,10 @@ jobs:
   - ${{ parameters.OS_NAME_LEFT }}_${{ parameters.BUILD_SYSTEM_LEFT }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
   - ${{ parameters.OS_NAME_RIGHT }}_${{ parameters.BUILD_SYSTEM_RIGHT }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
   
+  variables:
+    ${{ each pair in parameters }}:
+      ${{ pair.key }}: ${{ pair.value }}
+
   steps:
   - checkout: none
   
