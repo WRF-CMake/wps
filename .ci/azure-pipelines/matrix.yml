@@ -4,7 +4,6 @@ parameters:
     macOS: unix.yml
     Windows: windows.yml
   
-  # TODO CC/FC are not used for Make builds
   Linux:
     CC: gcc
     FC: gfortran
@@ -15,7 +14,7 @@ parameters:
     CC: gcc
     FC: gfortran
   
-  universal:
+  common:
     WRF_REPO: WRF-CMake/WRF
     WRF_COMMIT: letmaik/azure-pipelines
     WATS_REPO: WRF-CMake/wats
@@ -48,7 +47,7 @@ jobs:
               BUILD_TYPE: ${{ BUILD_TYPE }}
               MODE: ${{ MODE }}
               ${{ insert }}: ${{ parameters[OS_NAME] }}
-              ${{ insert }}: ${{ parameters.universal }}
+              ${{ insert }}: ${{ parameters.common }}
           
       # Make vs CMake comparison
       - template: wats_diff.yml
@@ -63,6 +62,7 @@ jobs:
           BUILD_SYSTEM_RIGHT: CMake
           BUILD_TYPE: ${{ BUILD_TYPE }}
           MODE: ${{ MODE }}
+          ${{ insert }}: ${{ parameters.common }}
 
 # Make vs Make comparison
 - ${{ each BUILD_TYPE in parameters.BUILD_TYPES }}:
@@ -75,3 +75,4 @@ jobs:
         BUILD_SYSTEM_RIGHT: Make
         BUILD_TYPE: ${{ BUILD_TYPE }}
         MODE: ${{ MODE }}
+        ${{ insert }}: ${{ parameters.common }}

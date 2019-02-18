@@ -9,8 +9,6 @@ variables:
   WATS_MODE: wps
 
 jobs:
-# TODO CC/FC are not used for Make builds
-
 - template: .ci/azure/wats_pkg.yml
   parameters:
     OS_NAME: Linux
