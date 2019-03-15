@@ -5,7 +5,7 @@ jobs:
   timeoutInMinutes: 0
 
   pool:
-    vmImage: vs2017-win2016
+    vmImage: windows-2019 # vs2017-win2016
 
   variables:
     ${{ each pair in parameters }}:
@@ -28,8 +28,9 @@ jobs:
     condition: and(succeeded(), startsWith(variables.MODE, 'dm'))
     displayName: Remove existing MSMPI
 
+  # /NoUpdate temporarily necessary due to freezing in windows-2019 image during update...
   - script: |
-      choco install msys2 --params "/InstallDir:c:\msys64"
+      choco install msys2 --params "/InstallDir:c:\msys64 /NoUpdate"
     displayName: Install MSYS2
 
   - script: |
