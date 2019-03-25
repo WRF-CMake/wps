@@ -53,5 +53,3 @@ jobs:
     displayName: Install WPS
 
   - template: wats_run.yml
-    parameters:
-      ${{ insert }}: ${{ parameters }}
