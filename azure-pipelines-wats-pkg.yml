@@ -9,7 +9,7 @@ variables:
   WATS_MODE: wps
 
 jobs:
-- template: .ci/azure/wats_pkg.yml
+- template: .ci/azure-pipelines/wats_pkg.yml
   parameters:
     OS_NAME: Linux
     BUILD_SYSTEM: Make
