@@ -14,8 +14,6 @@ jobs:
       ${{ pair.key }}: ${{ pair.value }}
 
   steps:
-  - checkout: none
-  
   - task: DownloadBuildArtifacts@0
     displayName: Retrieve ${{ parameters.OS_NAME_LEFT }} ${{ parameters.BUILD_SYSTEM_LEFT }} WATS outputs
     inputs:
