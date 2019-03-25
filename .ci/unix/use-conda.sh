@@ -7,5 +7,6 @@ elif [ "$(uname)" == "Linux" ]; then
     echo "##vso[task.prependpath]/usr/share/miniconda/bin"
     sudo chown -R $USER /usr/share/miniconda
 else
+    echo "##vso[task.prependpath]$CONDA"
     echo "##vso[task.prependpath]$CONDA\Scripts"
 fi

@@ -3,7 +3,7 @@ steps:
   displayName: Enable Conda
 
 - pwsh: |
-    git clone --depth=1 --branch=$Env:WATS_BRANCH https://github.com/$Env:WATS_REPO.git wats
+    git clone --depth=1 --branch=${{ parameters.WATS_BRANCH }} https://github.com/${{ parameters.WATS_REPO }}.git wats
     conda env update -n base -f wats/environment.yml
   displayName: Install WATS
 

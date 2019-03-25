@@ -8,8 +8,7 @@ jobs:
     vmImage: windows-2019 # vs2017-win2016
 
   variables:
-    ${{ each pair in parameters }}:
-      ${{ pair.key }}: ${{ pair.value }}
+    ${{ insert }}: ${{ parameters }}
 
   steps:
   - pwsh: .ci\windows\dump-vm-specs.ps1
@@ -54,3 +53,5 @@ jobs:
     displayName: Install WPS
 
   - template: wats_run.yml
+    parameters:
+      ${{ insert }}: ${{ parameters }}

@@ -1,8 +1,7 @@
 jobs:
 - template: unix.yml
   parameters:
-    ${{ each pair in parameters }}:
-      ${{ pair.key }}: ${{ pair.value }}
+    ${{ insert }}: ${{ parameters }}
 
 - job: publish_wats_pkg
   displayName: Publish WATS Package
