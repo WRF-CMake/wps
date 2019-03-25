@@ -18,7 +18,7 @@ parameters:
     WRF_REPO: WRF-CMake/WRF
     WRF_COMMIT: letmaik/azure-pipelines
     WATS_REPO: WRF-CMake/wats
-    WATS_BRANCH: master
+    WATS_BRANCH: letmaik/plots
     WATS_MODE: wps
     NESTING: basic
     GRIB1: 0

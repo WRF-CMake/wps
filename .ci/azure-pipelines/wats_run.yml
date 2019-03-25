@@ -1,11 +1,10 @@
 steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.x'
+- bash: bash .ci/unix/use-conda.sh
+  displayName: Enable Conda
 
 - pwsh: |
     git clone --depth=1 --branch=$Env:WATS_BRANCH https://github.com/$Env:WATS_REPO.git wats
-    pip install -r wats/requirements.txt
+    conda env update -n base -f wats/environment.yml
   displayName: Install WATS
 
 - pwsh: |
