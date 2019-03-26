@@ -5,7 +5,7 @@ variables:
   WRF_REPO: WRF-CMake/WRF
   WRF_COMMIT: letmaik/azure-pipelines
   WATS_REPO: WRF-CMake/wats
-  WATS_BRANCH: master
+  WATS_BRANCH: letmaik/plots # also change here: .ci/azure-pipelines/matrix.yml
   WATS_MODE: wps
 
 jobs:
