@@ -29,7 +29,7 @@ enable_testing()
 ########################
 
 # https://github.com/llvm-mirror/llvm/blob/632c2834/CMakeLists.txt#L52-L55
-set(BUILD_TYPE_VALUES Debug Release)
+set(BUILD_TYPE_VALUES Debug Release RelWithDebInfo)
 if (NOT CMAKE_CONFIGURATION_TYPES) # ignore for multi-config generators like MSVC
 	if (NOT CMAKE_BUILD_TYPE)
 		message(STATUS "No build type selected, default to Release")
@@ -118,16 +118,20 @@ elseif (NOT DEFINED Fortran_preprocess OR NOT DEFINED Fortran_io)
 	message(FATAL_ERROR "Missing or incomplete architecture files for Fortran, 'preprocess' or 'io' variable missing")
 endif()
 
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} ${C_checked}")
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} ${C_optimized}")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${C_other}")
-set(CMAKE_Fortran_FLAGS_DEBUG "${CMAKE_Fortran_FLAGS_DEBUG} ${Fortran_checked}")
-set(CMAKE_Fortran_FLAGS_RELEASE "${CMAKE_Fortran_FLAGS_RELEASE} ${Fortran_optimized}")
-set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${Fortran_preprocess} ${Fortran_io} ${Fortran_other}")
+set(CMAKE_C_FLAGS_DEBUG "${C_debug} ${C_checked}")
+set(CMAKE_C_FLAGS_RELEASE "${C_optimized}")
+set(CMAKE_C_FLAGS_RELWITHDEBINFO "${C_debug} ${C_optimized}")
+set(CMAKE_C_FLAGS "${C_other}")
+set(CMAKE_Fortran_FLAGS_DEBUG "${Fortran_debug} ${Fortran_checked}")
+set(CMAKE_Fortran_FLAGS_RELEASE "${Fortran_optimized}")
+set(CMAKE_Fortran_FLAGS_RELWITHDEBINFO "${Fortran_optimized} ${Fortran_debug}")
+set(CMAKE_Fortran_FLAGS "${Fortran_preprocess} ${Fortran_io} ${Fortran_other}")
 
 if (ENABLE_RUNTIME_CHECKS)
     set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} ${C_checked}")
-    set(CMAKE_Fortran_FLAGS_RELEASE "${CMAKE_Fortran_FLAGS_RELEASE} ${Fortran_checked}")
+	set(CMAKE_Fortran_FLAGS_RELEASE "${CMAKE_Fortran_FLAGS_RELEASE} ${Fortran_checked}")
+	set(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} ${C_checked}")
+	set(CMAKE_Fortran_FLAGS_RELWITHDEBINFO "${CMAKE_Fortran_FLAGS_RELWITHDEBINFO} ${Fortran_checked}")
 endif()
 
 if (SAVE_TEMPS)
