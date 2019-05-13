@@ -5,7 +5,7 @@ jobs:
   timeoutInMinutes: 0
 
   pool:
-    vmImage: windows-2019 # vs2017-win2016
+    vmImage: windows-2019
 
   variables:
     ${{ insert }}: ${{ parameters }}
@@ -52,4 +52,5 @@ jobs:
   - script: call .ci\windows\install-wps.bat
     displayName: Install WPS
 
-  - template: wats_run.yml
+  - ${{ if eq(parameters.WATS_RUN, 'true') }}:
+    - template: wats_run.yml

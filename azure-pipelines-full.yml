@@ -1,9 +1,8 @@
-# Run manually or by schedule only.
-trigger: none
-pr: none
+# Runs on commits to the wps-cmake branch and PRs.
+trigger:
+- wps-cmake
 
 jobs:
 - template: .ci/azure-pipelines/matrix.yml
   parameters:
-    BUILD_TYPES: [Debug, Release]
-    MODES: [serial, dmpar]
+    WATS_RUN: true

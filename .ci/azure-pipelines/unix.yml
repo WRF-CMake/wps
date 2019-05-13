@@ -38,4 +38,5 @@ jobs:
   - script: .ci/unix/install-wps.sh
     displayName: Install WPS
 
-  - template: wats_run.yml
+  - ${{ if eq(parameters.WATS_RUN, 'true') }}:
+    - template: wats_run.yml

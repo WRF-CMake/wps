@@ -2,6 +2,7 @@ jobs:
 - template: unix.yml
   parameters:
     ${{ insert }}: ${{ parameters }}
+    WATS_RUN: true
 
 - job: publish_wats_pkg
   displayName: Publish WATS Package
