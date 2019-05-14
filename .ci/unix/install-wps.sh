@@ -44,6 +44,7 @@ elif [ $BUILD_SYSTEM == "Make" ]; then
             ln -s /usr/lib/x86_64-linux-gnu netcdf/lib
 
             export NETCDF=`pwd`/netcdf
+            ls -al $NETCDF/lib
         fi
 
         ## As the zlib and PNG libraries are not in a standard path that will be checked automatically by the compiler,

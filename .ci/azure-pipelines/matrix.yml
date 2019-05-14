@@ -16,7 +16,7 @@ parameters:
   
   common:
     WRF_REPO: WRF-CMake/WRF
-    WRF_COMMIT: letmaik/azure-pipelines
+    WRF_COMMIT: wrf-cmake
     WATS_REPO: WRF-CMake/wats
     WATS_BRANCH: master # also change here: /azure-pipelines-wats-pkg.yml
     WATS_MODE: wps
