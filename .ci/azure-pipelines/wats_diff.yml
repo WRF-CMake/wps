@@ -1,3 +1,9 @@
+parameters:
+  tol_categorical:
+    Linux: 0.0
+    macOS: 0.0
+    Windows: 0.02 # equals 1 grid point for current test case
+
 jobs:
 - job: wats_diff_${{ parameters.OS_NAME_LEFT }}_${{ parameters.OS_NAME_RIGHT }}_${{ parameters.BUILD_SYSTEM_LEFT }}_${{ parameters.BUILD_SYSTEM_RIGHT }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
   displayName: 'WATS ${{ parameters.OS_NAME_LEFT }}/${{ parameters.OS_NAME_RIGHT }} ${{ parameters.BUILD_SYSTEM_LEFT }}/${{ parameters.BUILD_SYSTEM_RIGHT }}: ${{ parameters.BUILD_TYPE }}, ${{ parameters.MODE }}'
@@ -44,7 +50,7 @@ jobs:
   - script: |
       set -ex
       O=wats_outputs
-      W="python wats/wats/main.py diff --mode $WATS_MODE"
+      W="python wats/wats/main.py diff --mode $WATS_MODE --tol-categorical ${{ parameters.tol_categorical[parameters.OS_NAME_RIGHT] }}"
       $W $O/wats_${OS_NAME_LEFT}_${BUILD_SYSTEM_LEFT}_${BUILD_TYPE}_${MODE} $O/wats_${OS_NAME_RIGHT}_${BUILD_SYSTEM_RIGHT}_${BUILD_TYPE}_${MODE}
     displayName: Run WATS diff
       
