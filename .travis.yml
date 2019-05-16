@@ -6,7 +6,7 @@ python: "3.6"
 env:
   global:
     - WRF_REPO=WRF-CMake/WRF
-    - WRF_COMMIT=letmaik/azure-pipelines
+    - WRF_COMMIT=wrf-cmake
 
 jobs:
   include:
