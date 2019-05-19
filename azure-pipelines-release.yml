@@ -1,0 +1,19 @@
+# First, create a tag for the new version.
+# Then, run this pipeline on the tag (will not deploy if untagged)
+# to store binaries in a draft GitHub release.
+
+# Note that these values are also overridden to "none" in Azure DevOps's UI to
+# prevent others to run this pipeline by changing the triggers below and opening a PR.
+trigger: none
+pr: none
+
+jobs:
+- template: .ci/azure-pipelines/matrix.yml
+  parameters:
+    OS_NAMES: [Windows, macOS] # TODO Linux
+    BUILD_SYSTEMS: [CMake]
+    BUILD_TYPES: [Debug, Release]
+    MODES: [serial, dmpar]
+    WATS_DIFF: false
+    WATS_PLOTS: false
+    RELEASE: true
