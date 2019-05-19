@@ -1,0 +1,21 @@
+trigger: none
+pr: none
+
+variables:
+  WRF_REPO: WRF-CMake/WRF
+  WRF_COMMIT: wrf-cmake # also change here: .ci/azure-pipelines/matrix.yml
+  WATS_REPO: WRF-CMake/wats
+  WATS_BRANCH: master # also change here: .ci/azure-pipelines/matrix.yml
+  WATS_MODE: wps
+
+jobs:
+- template: .ci/azure-pipelines/wats_pkg.yml
+  parameters:
+    OS_NAME: Linux
+    BUILD_SYSTEM: Make
+    BUILD_TYPE: Debug
+    CC: gcc
+    FC: gfortran
+    MODE: serial
+
+      

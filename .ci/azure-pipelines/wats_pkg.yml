@@ -1,0 +1,33 @@
+jobs:
+- template: unix.yml
+  parameters:
+    ${{ insert }}: ${{ parameters }}
+    WATS_RUN: true
+
+- job: publish_wats_pkg
+  displayName: Publish WATS Package
+  
+  pool:
+    vmImage: ubuntu-16.04
+  
+  dependsOn:
+  - ${{ parameters.OS_NAME }}_${{ parameters.BUILD_SYSTEM }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
+
+  steps:
+  - checkout: none
+  
+  - task: DownloadBuildArtifacts@0
+    displayName: Retrieve WATS outputs
+    inputs:
+      downloadPath: wats_outputs
+      downloadType: specific
+      itemPattern: 'wats_${{ parameters.OS_NAME }}_${{ parameters.BUILD_SYSTEM }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}/**'
+  
+  - task: UniversalPackages@0
+    displayName: Publish universal package
+    inputs:
+      command: publish
+      publishDirectory: wats_outputs/wats_${{ parameters.OS_NAME }}_${{ parameters.BUILD_SYSTEM }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}/wps
+      vstsFeedPublish: WATS
+      # package name must be lowercase
+      vstsFeedPackagePublish: wps.ref

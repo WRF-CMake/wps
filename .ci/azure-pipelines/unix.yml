@@ -1,0 +1,42 @@
+jobs:
+- job: ${{ parameters.OS_NAME }}_${{ parameters.BUILD_SYSTEM }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}
+  displayName: '${{ parameters.OS_NAME }} ${{ parameters.BUILD_SYSTEM }}: ${{ parameters.BUILD_TYPE }}, ${{ parameters.MODE }}'
+
+  timeoutInMinutes: 0
+
+  pool:
+    ${{ if eq(parameters.OS_NAME, 'Linux') }}:
+      vmImage: ubuntu-16.04
+    ${{ if eq(parameters.OS_NAME, 'macOS') }}:
+      vmImage: macos-10.13
+
+  variables:
+    ${{ insert }}: ${{ parameters }}
+
+  steps:
+  - script: .ci/unix/dump-vm-specs.sh
+    displayName: Dump VM specs
+
+  - script: printenv
+    displayName: Dump environment variables
+
+  - script: |
+      set -e
+      cd ..
+      git clone --depth=100 --no-single-branch https://github.com/$WRF_REPO.git WRF
+      cd WRF
+      git checkout $WRF_COMMIT
+      git log --oneline -n 1
+    displayName: Download WRF
+
+  - script: ../WRF/.ci/unix/setup-dependencies.sh
+    displayName: Setup dependencies
+
+  - script: ../WRF/.ci/unix/install-wrf.sh
+    displayName: Install WRF
+
+  - script: .ci/unix/install-wps.sh
+    displayName: Install WPS
+
+  - ${{ if eq(parameters.WATS_RUN, 'true') }}:
+    - template: wats_run.yml

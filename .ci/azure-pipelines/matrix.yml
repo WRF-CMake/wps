@@ -1,0 +1,81 @@
+parameters:
+  templates:
+    Linux: unix.yml
+    macOS: unix.yml
+    Windows: windows.yml
+  
+  Linux:
+    CC: gcc-8
+    FC: gfortran-8
+  macOS:
+    CC: gcc-8
+    FC: gfortran-8
+  Windows:
+    CC: gcc
+    FC: gfortran
+  
+  common:
+    WRF_REPO: WRF-CMake/WRF
+    WRF_COMMIT: wrf-cmake # also change here: /azure-pipelines-wats-pkg.yml
+    WATS_REPO: WRF-CMake/wats
+    WATS_BRANCH: master # also change here: /azure-pipelines-wats-pkg.yml
+    WATS_MODE: wps
+    NESTING: basic
+    GRIB1: 0
+    GRIB2: 1
+  
+  # Loop/matrix parameters.
+  # Note that these may be overridden by the including yml (typically azure-pipelines.yml).
+  OS_NAMES: [Windows, Linux, macOS]
+  BUILD_SYSTEMS: [Make, CMake]
+  BUILD_TYPES: [Debug, Release]
+  # WPS in the Make variant does not support smpar out of the box, so ignore here.
+  MODES: [serial, dmpar]
+
+jobs:
+- ${{ each OS_NAME in parameters.OS_NAMES }}:
+  - ${{ each BUILD_TYPE in parameters.BUILD_TYPES }}:
+    - ${{ each MODE in parameters.MODES }}:
+      
+      - ${{ each BUILD_SYSTEM in parameters.BUILD_SYSTEMS }}:
+        # For Windows, since there is no Make-based build, skip that combination.
+        - ${{ if not(and(eq(OS_NAME, 'Windows'), eq(BUILD_SYSTEM, 'Make'))) }}:
+          - template: ${{ parameters.templates[OS_NAME] }}
+            parameters:
+              OS_NAME: ${{ OS_NAME }}
+              BUILD_SYSTEM: ${{ BUILD_SYSTEM }}
+              BUILD_TYPE: ${{ BUILD_TYPE }}
+              MODE: ${{ MODE }}
+              ${{ insert }}: ${{ parameters[OS_NAME] }}
+              ${{ insert }}: ${{ parameters.common }}
+              WATS_RUN: ${{ parameters.WATS_RUN }}
+          
+      # Make vs CMake comparison
+      - ${{ if eq(parameters.WATS_RUN, 'true') }}:
+        - template: wats_diff.yml
+          parameters:
+            # For Windows, since there is no Make-based reference, compare against Linux.
+            ${{ if eq(OS_NAME, 'Windows') }}:
+              OS_NAME_LEFT: Linux
+            ${{ if ne(OS_NAME, 'Windows') }}:
+              OS_NAME_LEFT: ${{ OS_NAME }}
+            OS_NAME_RIGHT: ${{ OS_NAME }}
+            BUILD_SYSTEM_LEFT: Make
+            BUILD_SYSTEM_RIGHT: CMake
+            BUILD_TYPE: ${{ BUILD_TYPE }}
+            MODE: ${{ MODE }}
+            ${{ insert }}: ${{ parameters.common }}
+
+# Make vs Make comparison
+- ${{ if eq(parameters.WATS_RUN, 'true') }}:
+  - ${{ each BUILD_TYPE in parameters.BUILD_TYPES }}:
+    - ${{ each MODE in parameters.MODES }}:
+      - template: wats_diff.yml
+        parameters:
+          OS_NAME_LEFT: Linux
+          OS_NAME_RIGHT: macOS
+          BUILD_SYSTEM_LEFT: Make
+          BUILD_SYSTEM_RIGHT: Make
+          BUILD_TYPE: ${{ BUILD_TYPE }}
+          MODE: ${{ MODE }}
+          ${{ insert }}: ${{ parameters.common }}

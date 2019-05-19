@@ -1,0 +1,13 @@
+# Runs on commits to any branch except wps-cmake.
+trigger:
+  branches:
+    include:
+    - '*'
+    exclude:
+    - wps-cmake
+pr: none
+
+jobs:
+- template: .ci/azure-pipelines/matrix.yml
+  parameters:
+    WATS_RUN: false

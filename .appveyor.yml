@@ -8,32 +8,34 @@ environment:
   global:
     WRF_REPO: WRF-CMake/WRF
     WRF_COMMIT: wrf-cmake
+    BUILD_SYSTEM: CMake
 
   matrix:
     - BUILD_TYPE: Debug
+      CC: gcc
+      FC: gfortran
       MODE: serial
       NESTING: basic
       GRIB1: 0
       GRIB2: 1
 
     - BUILD_TYPE: Debug
+      CC: gcc
+      FC: gfortran
       MODE: dmpar
       NESTING: basic
       GRIB1: 0
       GRIB2: 1
 
 install:
+  - ps: .ci\windows\dump-vm-specs.ps1
   - cd ..
   - git clone --depth=100 --no-single-branch https://github.com/%WRF_REPO%.git WRF
   - cd WRF
   - git checkout %WRF_COMMIT%
-  - call .ci\appveyor\setup-dependencies.bat
-  - call .ci\appveyor\install-wrf.bat
+  - call .ci\windows\setup-dependencies.bat
+  - call .ci\windows\install-wrf.bat
   - cd %APPVEYOR_BUILD_FOLDER%
 
 build_script:
-  - call .ci\appveyor\install-wps.bat
-
-artifacts:
-  - path: build/install
-    name: WPS
+  - call .ci\windows\install-wps.bat

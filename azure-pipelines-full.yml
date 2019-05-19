@@ -1,0 +1,8 @@
+# Runs on commits to the wps-cmake branch and PRs.
+trigger:
+- wps-cmake
+
+jobs:
+- template: .ci/azure-pipelines/matrix.yml
+  parameters:
+    WATS_RUN: true

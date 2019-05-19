@@ -120,7 +120,7 @@ if [ -n "$NETCDF" ] ; then
   # for 3.6.2 and greater there might be a second library, libnetcdff.a .  Check for this and use
   # if available
   NETCDFF=" "
-  if [ -f "$NETCDF/lib/libnetcdff.a" ] ; then
+  if [ -f "$NETCDF/lib/libnetcdff.a" -o -f "$NETCDF/lib/libnetcdff.so" ] ; then
     NETCDFF="-lnetcdff"
   fi
 else
@@ -165,17 +165,7 @@ if [ $os = "Linux" -o $os = "Darwin" ]; then
   SFC="`type $SFC 2>/dev/null | awk '{print $NF}' | sed -e 's/(//g;s/)//g'`"
   SCC="`type $SCC 2>/dev/null | awk '{print $NF}' | sed -e 's/(//g;s/)//g'`"
 
-  if [ -e $NETCDF/lib/libnetcdf.a -a "$SFC" != "" -a "$SCC" != "" ]; then
-
-    SFC_MULTI_ABI=0
-    SCC_MULTI_ABI=0
-    CROSS_COMPILING=0
-
-    foo=foo_$$
-
-    echo
-    echo Testing for NetCDF, C and Fortran compiler
-    echo
+  foo=foo_$$
 
 cat > ${foo}.c <<EOF 
  int main(int argc, char ** argv)
@@ -190,6 +180,35 @@ cat > ${foo}.f <<EOF
             call EXIT(STATUS)
           end program test_exit
 EOF
+
+  # do not do this test for MIC, which cross compiles
+  if [ -z "`grep 'SCC.*mmic' configure.wps`" ] ; then
+    # Detecting whether if mpi compiler wrapper supports -cc/-f90 options
+    mpicc -cc=$SCC -o ${foo} ${foo}.c > /dev/null 2>&1
+    if [ $? != 0 ]; then
+      echo "mpicc does not support -cc, removing argument"
+      sed 's/-cc=$(SCC)//' configure.wps > configure.wps.edit
+      mv configure.wps.edit configure.wps
+    fi
+    rm ${foo} ${foo}.o 2> /dev/null
+    mpif90 -f90=$SFC -o ${foo} ${foo}.f > /dev/null 2>&1
+    if [ $? != 0 ]; then
+      echo "mpif90 does not support -f90, removing argument"
+      sed 's/-f90=$(SFC)//'  configure.wps > configure.wps.edit
+      mv configure.wps.edit configure.wps
+    fi
+    rm ${foo} ${foo}.o 2> /dev/null
+  fi
+
+  if [ -e $NETCDF/lib/libnetcdf.a -a "$SFC" != "" -a "$SCC" != "" ]; then
+
+    SFC_MULTI_ABI=0
+    SCC_MULTI_ABI=0
+    CROSS_COMPILING=0
+
+    echo
+    echo Testing for NetCDF, C and Fortran compiler
+    echo
 
     nct=`nm $NETCDF/lib/libnetcdf.a | grep '^0' | cut -d' ' -f 1 | head -1 | wc -c | awk '{print $1+0}'`
     if [ "$nct" -eq "9" ]; then
