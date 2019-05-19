@@ -30,8 +30,8 @@ steps:
   inputs:
     githubConnection: WRF-CMake-releases
     repositoryName: WRF-CMake/WPS
-    # TODO we really want createOrEdit here like on Appveyor or Travis CI
-    #action: create
+    action: edit # will create if not existing
+    tag: $(Build.SourceBranchName)
     isDraft: true
     isPreRelease: true
     assetUploadMode: replace
