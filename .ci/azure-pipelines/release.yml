@@ -28,7 +28,7 @@ steps:
 - task: GithubRelease@0 
   displayName: Create GitHub Draft Release
   inputs:
-    githubConnection: WRF-CMake-releases
+    gitHubConnection: WRF-CMake-releases
     repositoryName: WRF-CMake/WPS
     action: edit # will create if not existing
     tag: $(Build.SourceBranchName)
