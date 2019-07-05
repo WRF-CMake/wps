@@ -54,6 +54,7 @@ target_link_libraries(int2nc
 add_executable(height_ukmo height_ukmo.F)
 target_link_libraries(height_ukmo util_helpers)
 
+# IMPORTANT: When changing this list, also change cmake/post_install.
 set(utils
     rd_intermediate
     avg_tsfc
