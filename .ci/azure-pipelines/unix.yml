@@ -37,8 +37,8 @@ jobs:
       cd ..
       sudo apt-get update
       sudo apt-get install -y curl
-      curl -L --retry 3 https://github.com/$WRF_REPO/archive/$WRF_COMMIT.tar.gz | tar xz
-      mv $WRF_REPO-$WRF_COMMIT WRF
+      mkdir WRF && cd WRF
+      curl -L --retry 3 https://github.com/$WRF_REPO/archive/$WRF_COMMIT.tar.gz | tar xz --strip-components=1
     displayName: Download WRF
 
   - script: ../WRF/.ci/unix/setup-dependencies.sh

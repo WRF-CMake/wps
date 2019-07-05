@@ -4,9 +4,9 @@ steps:
 
 - bash: |
     set -ex
-    curl -L --retry 3 https://github.com/$WATS_REPO/archive/$WATS_BRANCH.tar.gz | tar xz
-    mv $WATS_REPO-$WATS_BRANCH wats
-    conda env update -n base -f wats/environment.yml
+    mkdir wats && cd wats
+    curl -L --retry 3 https://github.com/$WATS_REPO/archive/$WATS_BRANCH.tar.gz | tar xz --strip-components=1
+    conda env update -n base -f environment.yml
   displayName: Install WATS
 
 - bash: |
