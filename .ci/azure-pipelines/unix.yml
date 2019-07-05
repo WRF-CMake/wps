@@ -10,10 +10,22 @@ jobs:
     ${{ if eq(parameters.OS_NAME, 'macOS') }}:
       vmImage: macos-10.13
 
+  ${{ if eq(parameters.OS_NAME, 'Linux') }}:
+    container:
+      image: ubuntu:16.04
+      options: "--name ci-container -v /usr/bin/docker:/tmp/docker:ro"
+
   variables:
     ${{ insert }}: ${{ parameters }}
 
   steps:
+  - ${{ if eq(parameters.OS_NAME, 'Linux') }}:
+    # https://github.com/Microsoft/azure-pipelines-agent/issues/2043#issuecomment-489692810
+    - script: |
+        /tmp/docker exec -t -u 0 ci-container \
+          sh -c "apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confold" -y install sudo"
+      displayName: Set up sudo
+    
   - script: .ci/unix/dump-vm-specs.sh
     displayName: Dump VM specs
 
@@ -23,10 +35,8 @@ jobs:
   - script: |
       set -e
       cd ..
-      git clone --depth=100 --no-single-branch https://github.com/$WRF_REPO.git WRF
-      cd WRF
-      git checkout $WRF_COMMIT
-      git log --oneline -n 1
+      curl -L --retry 3 https://github.com/$WRF_REPO/archive/$WRF_COMMIT.tar.gz | tar xz
+      mv $WRF_REPO-$WRF_COMMIT WRF
     displayName: Download WRF
 
   - script: ../WRF/.ci/unix/setup-dependencies.sh

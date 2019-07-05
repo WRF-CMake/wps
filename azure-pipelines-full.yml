@@ -1,6 +1,11 @@
 # Runs on commits to the wps-cmake branch and PRs.
 trigger:
-- wps-cmake
+  branches:
+    include:
+    - wps-cmake
+  paths:
+    exclude:
+    - 'README*'
 
 # Run every week even if there are no code changes.
 # Catches any problems due to new dependency versions from package managers.

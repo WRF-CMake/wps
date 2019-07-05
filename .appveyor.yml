@@ -4,6 +4,10 @@ image: Visual Studio 2017 # See https://www.appveyor.com/docs/build-environment/
 
 clone_depth: 50
 
+skip_commits:
+  files:
+    - 'README*'
+
 environment:
   global:
     WRF_REPO: WRF-CMake/WRF
