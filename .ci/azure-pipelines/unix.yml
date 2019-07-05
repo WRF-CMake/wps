@@ -32,11 +32,14 @@ jobs:
   - script: printenv
     displayName: Dump environment variables
 
+  - ${{ if eq(parameters.OS_NAME, 'Linux') }}:
+    - script: |
+        sudo apt-get update && sudo apt-get install -y curl
+      displayName: Install curl
+
   - script: |
       set -e
       cd ..
-      sudo apt-get update
-      sudo apt-get install -y curl
       mkdir WRF && cd WRF
       curl -L --retry 3 https://github.com/$WRF_REPO/archive/$WRF_COMMIT.tar.gz | tar xz --strip-components=1
     displayName: Download WRF

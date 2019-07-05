@@ -32,7 +32,7 @@ jobs:
         - BUILD_TYPE=Debug
         - CC=gcc
         - FC=gfortran
-        - MODE=dm_sm
+        - MODE=dmpar
 
     - stage: build
       os: linux
@@ -54,7 +54,7 @@ jobs:
         - BUILD_TYPE=Debug
         - CC=gcc-9
         - FC=gfortran-9
-        - MODE=dm_sm
+        - MODE=dmpar
 
     - stage: build
       os: osx
@@ -76,7 +76,7 @@ jobs:
         - BUILD_TYPE=Debug
         - CC=gcc-9 # GNU via Homebrew
         - FC=gfortran-9
-        - MODE=dm_sm
+        - MODE=dmpar
 
     # CMake builds
 
@@ -105,7 +105,7 @@ jobs:
         - FC=gfortran
         - GRIB1=1
         - GRIB2=0
-        - MODE=dm_sm
+        - MODE=dmpar
         - NESTING=basic
 
     - stage: build
@@ -133,7 +133,7 @@ jobs:
         - FC=gfortran-9
         - GRIB1=1
         - GRIB2=0
-        - MODE=dm_sm
+        - MODE=dmpar
         - NESTING=basic
 
     - stage: build
@@ -161,7 +161,7 @@ jobs:
         - FC=gfortran-9
         - GRIB1=1
         - GRIB2=1
-        - MODE=dmpar # not using dm_sm as Apple's Clang doesn't easily support OpenMP
+        - MODE=dmpar
         - NESTING=basic
 
 before_install:
