@@ -35,6 +35,8 @@ jobs:
   - script: |
       set -e
       cd ..
+      sudo apt-get update
+      sudo apt-get install -y curl
       curl -L --retry 3 https://github.com/$WRF_REPO/archive/$WRF_COMMIT.tar.gz | tar xz
       mv $WRF_REPO-$WRF_COMMIT WRF
     displayName: Download WRF
