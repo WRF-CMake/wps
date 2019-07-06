@@ -69,6 +69,14 @@ set_property(
     TARGET ${utils} util_helpers
     PROPERTY Fortran_FORMAT FREE)
 
+if (WIN32)
+    # See cmake/post_install/CMakeLists.txt for why this is necessary.
+    set(install_dir .)
+else()
+    # util is the executables location in WRF's makefiles.
+    set(install_dir util)
+endif()
+
 install(TARGETS ${utils}
-    RUNTIME DESTINATION util
+    RUNTIME DESTINATION ${install_dir}
 )
