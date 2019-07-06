@@ -124,6 +124,15 @@ target_link_libraries(ungrib
 install( TARGETS ungrib
     RUNTIME DESTINATION .
 )
-install( TARGETS g1print g2print
-    RUNTIME DESTINATION util
+
+if (WIN32)
+    # See cmake/post_install/CMakeLists.txt for why this is necessary.
+    set(install_dir .)
+else()
+    # util is the executables location in WRF's makefiles.
+    set(install_dir util)
+endif()
+
+install(TARGETS g1print g2print
+    RUNTIME DESTINATION ${install_dir}
 )
