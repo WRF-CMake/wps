@@ -1,6 +1,9 @@
+#!/usr/bin/env python
+
 # Copyright 2018 M. Riechert and D. Meyer. Licensed under the MIT License.
 
 import os
+import sys
 import shutil
 import glob
 import string
@@ -29,19 +32,36 @@ def generate_gribfile_extensions():
     letters = list(string.ascii_uppercase)
     for a, b, c in itertools.product(letters, repeat=3):
         yield a + b + c
+
+def collect_input_files(paths):
+    input_files = []
+    for path in paths:
+        if os.path.isdir(path):
+            for filename in os.listdir(path):
+                input_files.append(os.path.join(path, filename))
+        else:
+            input_files.append(path)
+    return input_files
     
-def link_grib_files(input_dir, output_dir):
+def link_grib_files(input_paths, output_dir):
+    os.makedirs(output_dir, exist_ok=True)
     for path in glob.glob(os.path.join(output_dir, 'GRIBFILE.*')):
         os.remove(path)
-    paths = [os.path.join(input_dir, name) for name in os.listdir(input_dir)]
-    for path, ext in zip(paths, generate_gribfile_extensions()):
+    paths = collect_input_files(input_paths)
+    grib_exts = generate_gribfile_extensions()
+    for path in paths:
+        try:
+            ext = next(grib_exts)
+        except StopIteration:
+            print('RAN OUT OF GRIB FILE SUFFIXES!', file=sys.stderr)
+            sys.exit(1)
         link_path = os.path.join(output_dir, 'GRIBFILE.' + ext)
         link_or_copy(path, link_path)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('input', help='Folder with GRIB files')
-    parser.add_argument('output', nargs='?', default=os.getcwd(),
-                        help='Output folder, default is current directory')
+    parser = argparse.ArgumentParser(description='A tool that symlinks GRIB files to GRIBFILE.??? format.')
+    parser.add_argument('paths', metavar='path', nargs='+', help='GRIB file or folder with GRIB files')
+    parser.add_argument('-o', '--out', metavar='output_dir', help='Output folder (default is current folder)', 
+                        default=os.getcwd())
     args = parser.parse_args()
-    link_grib_files(args.input, args.output)
+    link_grib_files(args.paths, args.out)

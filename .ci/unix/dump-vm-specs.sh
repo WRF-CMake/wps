@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Copyright 2018 M. Riechert and D. Meyer. Licensed under the MIT License.
+
 set -ex
 
 if [ "$(uname)" == "Darwin" ]; then
@@ -11,6 +13,9 @@ if [ "$(uname)" == "Darwin" ]; then
     sudo scutil --get HostName || true
     sudo scutil --get LocalHostName || true
 elif [ "$(uname)" == "Linux" ]; then
+    if [ "$(which lsb_release)" == "" ]; then
+        sudo apt install -y lsb-release
+    fi
     lsb_release -a
     free -m
     lscpu

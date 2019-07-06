@@ -54,6 +54,7 @@ target_link_libraries(int2nc
 add_executable(height_ukmo height_ukmo.F)
 target_link_libraries(height_ukmo util_helpers)
 
+# IMPORTANT: When changing this list, also change cmake/post_install.
 set(utils
     rd_intermediate
     avg_tsfc
@@ -68,6 +69,14 @@ set_property(
     TARGET ${utils} util_helpers
     PROPERTY Fortran_FORMAT FREE)
 
+if (WIN32)
+    # See cmake/post_install/CMakeLists.txt for why this is necessary.
+    set(install_dir .)
+else()
+    # util is the executables location in WRF's makefiles.
+    set(install_dir util)
+endif()
+
 install(TARGETS ${utils}
-    RUNTIME DESTINATION .
+    RUNTIME DESTINATION ${install_dir}
 )
