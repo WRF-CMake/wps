@@ -6,8 +6,9 @@
 set -e
 
 SCRIPTDIR=$(dirname "$0")
-ROOTDIR=$(realpath $SCRIPTDIR/../..)
-cd $ROOTDIR
+REPODIR=$(realpath $SCRIPTDIR/../..)
+# above repo root as this is where WRF is cloned into
+MOUNTDIR=$(realpath $SCRIPTDIR/../../..)
 
 container=wps-ci
 
@@ -15,7 +16,7 @@ container=wps-ci
 if [ ! "$(docker ps -q -f name=$container)" ]; then
     echo "Creating Docker container $container"
     set -x
-    docker run --name $container -t -d -v $ROOTDIR:$ROOTDIR -w $ROOTDIR -e DOCKER=1 $IMAGE
+    docker run --name $container -t -d -v $MOUNTDIR:$MOUNTDIR -w $REPODIR -e DOCKER=1 $IMAGE
     set +x
     
     echo "Installing sudo inside container"
