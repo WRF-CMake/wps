@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 
 # WRF-CMake (https://github.com/WRF-CMake/wps).
-# Copyright 2018 M. Riechert and D. Meyer. Licensed under the MIT License.
+# Copyright 2019 M. Riechert and D. Meyer. Licensed under the MIT License.
+
+set -ex
 
 # See https://docs.microsoft.com/en-gb/azure/devops/pipelines/languages/anaconda.
 
 if [ "$(uname)" == "Darwin" ]; then
     echo "##vso[task.prependpath]$CONDA/bin"
-    sudo chown -R $USER $CONDA
+    sudo chown -R $(id -u -n) $CONDA
 elif [ "$(uname)" == "Linux" ]; then
     if [ ! -d /usr/share/miniconda ]; then
         curl -L --retry 3 https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -o miniconda.sh
@@ -15,7 +17,11 @@ elif [ "$(uname)" == "Linux" ]; then
         sudo ./miniconda.sh -b -p /usr/share/miniconda
         rm miniconda.sh
     fi
-    echo "##vso[task.prependpath]/usr/share/miniconda/bin"
+    if [[ "$DOCKER" == "1" ]]; then
+        echo 'export PATH=/usr/share/miniconda/bin:$PATH' >> ~/.bash_profile
+    else
+        echo "##vso[task.prependpath]/usr/share/miniconda/bin"
+    fi
     sudo chown -R $(id -u -n) /usr/share/miniconda
 else
     echo "##vso[task.prependpath]$CONDA\Scripts"

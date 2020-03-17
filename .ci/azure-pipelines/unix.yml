@@ -8,34 +8,28 @@ jobs:
   timeoutInMinutes: 0
 
   pool:
-    ${{ if eq(parameters.OS_NAME, 'Linux') }}:
-      vmImage: ubuntu-16.04
+    ${{ if or(eq(parameters.OS_NAME, 'Ubuntu'), eq(parameters.OS_NAME, 'CentOS')) }}:
+      vmImage: ubuntu-latest
     ${{ if eq(parameters.OS_NAME, 'macOS') }}:
-      vmImage: macos-10.13
-
-  ${{ if eq(parameters.OS_NAME, 'Linux') }}:
-    container:
-      image: ubuntu:16.04
-      options: "--name ci-container -v /usr/bin/docker:/tmp/docker:ro"
+      vmImage: macOS-10.14
 
   variables:
     ${{ insert }}: ${{ parameters }}
+    ${{ if eq(parameters.OS_NAME, 'Ubuntu') }}:
+      IMAGE: ubuntu:16.04
+      run: .ci/unix/run-in-docker.sh
+    ${{ if eq(parameters.OS_NAME, 'CentOS') }}:
+      IMAGE: quay.io/pypa/manylinux2010_x86_64:latest
+      run: .ci/unix/run-in-docker.sh
 
-  steps:
-  - ${{ if eq(parameters.OS_NAME, 'Linux') }}:
-    # https://github.com/Microsoft/azure-pipelines-agent/issues/2043#issuecomment-489692810
-    - script: |
-        /tmp/docker exec -t -u 0 ci-container \
-          sh -c "apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confold" -y install sudo"
-      displayName: Set up sudo
-    
-  - script: .ci/unix/dump-vm-specs.sh
+  steps:    
+  - script: $(run) .ci/unix/dump-vm-specs.sh
     displayName: Dump VM specs
 
-  - script: printenv
+  - script: $(run) printenv | sort
     displayName: Dump environment variables
 
-  - ${{ if eq(parameters.OS_NAME, 'Linux') }}:
+  - ${{ if eq(parameters.OS_NAME, 'Ubuntu') }}:
     - script: |
         sudo apt-get update && sudo apt-get install -y curl
       displayName: Install curl
@@ -47,13 +41,13 @@ jobs:
       curl -L --retry 3 https://github.com/$WRF_REPO/archive/$WRF_COMMIT.tar.gz | tar xz --strip-components=1
     displayName: Download WRF
 
-  - script: ../WRF/.ci/unix/setup-dependencies.sh
+  - script: $(run) ../WRF/.ci/unix/setup-dependencies.sh
     displayName: Setup dependencies
 
-  - script: ../WRF/.ci/unix/install-wrf.sh
+  - script: $(run) ../WRF/.ci/unix/install-wrf.sh
     displayName: Install WRF
 
-  - script: .ci/unix/install-wps.sh
+  - script: $(run) .ci/unix/install-wps.sh
     displayName: Install WPS
 
   - ${{ if eq(parameters.WATS_RUN, 'true') }}:

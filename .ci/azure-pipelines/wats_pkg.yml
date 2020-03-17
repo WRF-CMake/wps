@@ -11,7 +11,7 @@ jobs:
   displayName: Publish WATS Package
   
   pool:
-    vmImage: ubuntu-16.04
+    vmImage: ubuntu-latest
   
   dependsOn:
   - ${{ parameters.OS_NAME }}_${{ parameters.BUILD_SYSTEM }}_${{ parameters.BUILD_TYPE }}_${{ parameters.MODE }}

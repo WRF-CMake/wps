@@ -3,13 +3,17 @@
 
 parameters:
   templates:
-    Linux: unix.yml
+    Ubuntu: unix.yml
+    CentOS: unix.yml
     macOS: unix.yml
     Windows: windows.yml
   
-  Linux:
+  Ubuntu:
     CC: gcc-9
     FC: gfortran-9
+  CentOS:
+    CC: gcc
+    FC: gfortran
   macOS:
     CC: gcc-9
     FC: gfortran-9
@@ -31,7 +35,7 @@ parameters:
 
   # Loop/matrix parameters.
   # Note that these may be overridden by the including yml (typically azure-pipelines.yml).
-  OS_NAMES: [Windows, Linux, macOS]
+  OS_NAMES: [Windows, Ubuntu, CentOS, macOS]
   BUILD_SYSTEMS: [Make, CMake]
   BUILD_TYPES: [Debug, Release]
   # WPS in the Make variant does not support smpar out of the box, so ignore here.
@@ -60,9 +64,9 @@ jobs:
       - ${{ if eq(parameters.WATS_RUN, 'true') }}:
         - template: wats_diff.yml
           parameters:
-            # For Windows, since there is no Make-based reference, compare against Linux.
+            # For Windows, since there is no Make-based reference, compare against Ubuntu.
             ${{ if eq(OS_NAME, 'Windows') }}:
-              OS_NAME_LEFT: Linux
+              OS_NAME_LEFT: Ubuntu
             ${{ if ne(OS_NAME, 'Windows') }}:
               OS_NAME_LEFT: ${{ OS_NAME }}
             OS_NAME_RIGHT: ${{ OS_NAME }}
@@ -78,7 +82,7 @@ jobs:
     - ${{ each MODE in parameters.MODES }}:
       - template: wats_diff.yml
         parameters:
-          OS_NAME_LEFT: Linux
+          OS_NAME_LEFT: Ubuntu
           OS_NAME_RIGHT: macOS
           BUILD_SYSTEM_LEFT: Make
           BUILD_SYSTEM_RIGHT: Make
