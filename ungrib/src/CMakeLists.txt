@@ -22,7 +22,7 @@ if (ENABLE_GRIB2_JPEG2000)
         ${JASPER_LIBRARIES}
     )
     include_directories(
-        ${JASPER_INCLUDE_DIRS}
+        ${JASPER_INCLUDE_DIR}
     )
     add_definitions(-DUSE_JPEG2000)
 endif()
