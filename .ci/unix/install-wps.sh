@@ -75,10 +75,8 @@ elif [ $BUILD_SYSTEM == "Make" ]; then
 
         # Otherwise libpng is not found.
         # Note that LIBRARY_PATH and CPATH applies to all compiler invocations.
-        export LIBRARY_PATH=$(brew --prefix png)/lib
-        export CPATH=$(brew --prefix png)/include
-        echo "LIBRARY_PATH=$LIBRARY_PATH"
-        echo "CPATH=$CPATH"
+        export LIBRARY_PATH=/usr/local/lib
+        export CPATH=/usr/local/include
 
     else
         echo "The environment is not recognised"
