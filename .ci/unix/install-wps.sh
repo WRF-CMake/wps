@@ -73,6 +73,9 @@ elif [ $BUILD_SYSTEM == "Make" ]; then
         export JASPERLIB=$(brew --prefix jasper)/lib
         export JASPERINC=$(brew --prefix jasper)/include
 
+        # Otherwise libpng is not found.
+        export LIBRARY_PATH=/usr/local/lib
+
     else
         echo "The environment is not recognised"
         exit 1
