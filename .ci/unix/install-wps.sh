@@ -74,7 +74,11 @@ elif [ $BUILD_SYSTEM == "Make" ]; then
         export JASPERINC=$(brew --prefix jasper)/include
 
         # Otherwise libpng is not found.
-        export LIBRARY_PATH=/usr/local/lib
+        # Note that LIBRARY_PATH and CPATH applies to all compiler invocations.
+        export LIBRARY_PATH=$(brew --prefix png)/lib
+        export CPATH=$(brew --prefix png)/include
+        echo "LIBRARY_PATH=$LIBRARY_PATH"
+        echo "CPATH=$CPATH"
 
     else
         echo "The environment is not recognised"
