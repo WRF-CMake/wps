@@ -21,6 +21,8 @@ jobs:
     ${{ if eq(parameters.OS_NAME, 'CentOS') }}:
       IMAGE: quay.io/pypa/manylinux2010_x86_64:latest
       run: .ci/unix/run-in-docker.sh
+    ${{ if eq(parameters.OS_NAME, 'macOS') }}:
+      run: ''
 
   steps:    
   - script: $(run) .ci/unix/dump-vm-specs.sh
