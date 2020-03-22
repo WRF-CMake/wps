@@ -24,14 +24,14 @@ steps:
       archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.SourceBranchName)-$(NESTING)_nesting-$(MODE)-x64-$(OS_NAME)-$(BUILD_TYPE).tar.xz' 
     displayName: Create distribution package
 
-  - bash: |
-      set -ex
-      cd "$(Build.ArtifactStagingDirectory)"
-      # CentOS packages will run on most glibc-based Linux distributions
-      find . -name '*CentOS*' -exec bash -c 'mv $0 ${0/CentOS/Linux}' {} \;
-      # Rename all files to lowercase
-      for file in $(ls); do mv ${file} $(echo ${file} | tr '[:upper:]' '[:lower:]'); done
-    displayName: Rename package files
+- bash: |
+    set -ex
+    cd "$(Build.ArtifactStagingDirectory)"
+    # CentOS packages will run on most glibc-based Linux distributions
+    find . -name '*CentOS*' -exec bash -c 'mv $0 ${0/CentOS/Linux}' {} \;
+    # Rename all files to lowercase
+    for file in $(ls); do mv ${file} $(echo ${file} | tr '[:upper:]' '[:lower:]'); done
+  displayName: Rename package files
 
 # not strictly needed
 - task: PublishBuildArtifacts@1
