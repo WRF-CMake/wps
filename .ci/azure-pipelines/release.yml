@@ -31,7 +31,7 @@ steps:
       find . -name '*CentOS*' -exec bash -c 'mv $0 ${0/CentOS/Linux}' {} \;
       # Rename all files to lowercase
       for file in $(ls); do mv ${file} $(echo ${file} | tr '[:upper:]' '[:lower:]'); done
-  displayName: Rename package files
+    displayName: Rename package files
 
 # not strictly needed
 - task: PublishBuildArtifacts@1
