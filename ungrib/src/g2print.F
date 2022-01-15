@@ -488,10 +488,10 @@ end program g2print
            write (6,*) '     ',map%source
 
           if (debug_level .le. 50) then
-          write(6,*) '---------------------------------------------------------------------------------------'
-          write(6,*) ' rec Prod Cat Param  Lvl    Lvl      Lvl     Prod    Name            Time          Fcst'
-          write(6,*) ' num Disc     num    code   one      two     Templ                                 hour'
-          write(6,*) '---------------------------------------------------------------------------------------'
+          write(6,'(a)') '---------------------------------------------------------------------------------------'
+          write(6,'(a)') ' rec Prod Cat Param  Lvl    Lvl      Lvl     Prod    Name            Time          Fcst'
+          write(6,'(a)') ' num Disc     num    code   one      two     Templ                                 hour'
+          write(6,'(a)') '---------------------------------------------------------------------------------------'
           endif
 
 
@@ -562,7 +562,7 @@ end program g2print
               endif
 
               ! Scale lat/lon values to 0-180, default range is 1e6.
-              if (map%lat1.ge.scale_factor) then 
+              if (abs(map%lat1).ge.scale_factor) then 
                  map%lat1 = map%lat1/scale_factor
               endif
               if (map%lon1.ge.scale_factor) then 
