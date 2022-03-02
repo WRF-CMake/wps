@@ -11,20 +11,23 @@ jobs:
     ${{ if or(eq(parameters.OS_NAME, 'Ubuntu'), eq(parameters.OS_NAME, 'CentOS')) }}:
       vmImage: ubuntu-latest
     ${{ if eq(parameters.OS_NAME, 'macOS') }}:
-      vmImage: macOS-10.14
+      vmImage: macOS-11
 
   variables:
     ${{ insert }}: ${{ parameters }}
     ${{ if eq(parameters.OS_NAME, 'Ubuntu') }}:
-      IMAGE: ubuntu:16.04
+      IMAGE: ubuntu:20.04
       run: .ci/unix/run-in-docker.sh
     ${{ if eq(parameters.OS_NAME, 'CentOS') }}:
-      IMAGE: quay.io/pypa/manylinux2010_x86_64:latest
+      IMAGE: quay.io/pypa/manylinux2014_x86_64:latest
       run: .ci/unix/run-in-docker.sh
     ${{ if eq(parameters.OS_NAME, 'macOS') }}:
       run: ''
 
   steps:    
+  - script: .ci/unix/increase-swap-space.sh
+    displayName: Increase swap space
+
   - script: $(run) .ci/unix/dump-vm-specs.sh
     displayName: Dump VM specs
 

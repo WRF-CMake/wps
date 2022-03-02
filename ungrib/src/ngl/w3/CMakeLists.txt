@@ -8,7 +8,6 @@ endif()
 set(CMAKE_Fortran_MODULE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/mod)
 
 add_library(w3 STATIC
-    bacio_module.f
     bacio.v1.3.c
     baciof.f
     baciof.h

@@ -9,14 +9,14 @@ parameters:
     Windows: windows.yml
   
   Ubuntu:
-    CC: gcc-9
-    FC: gfortran-9
+    CC: gcc-11
+    FC: gfortran-11
   CentOS:
     CC: gcc
     FC: gfortran
   macOS:
-    CC: gcc-9
-    FC: gfortran-9
+    CC: gcc-11
+    FC: gfortran-11
   Windows:
     CC: gcc
     FC: gfortran
