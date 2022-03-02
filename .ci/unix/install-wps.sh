@@ -38,17 +38,7 @@ elif [ $BUILD_SYSTEM == "Make" ]; then
             *) echo "Invalid: $MODE" ;;
         esac
 
-        if [ "$(lsb_release -c -s)" == "trusty" -o "$(lsb_release -i -s)" == "CentOS" ]; then
-            export NETCDF=/usr
-        else
-            # Need to create symlinked folder hierarchy that WRF expects...
-            mkdir netcdf
-            ln -s /usr/include netcdf/include
-            ln -s /usr/lib/x86_64-linux-gnu netcdf/lib
-
-            export NETCDF=`pwd`/netcdf
-            ls -al $NETCDF/lib
-        fi
+        export NETCDF=/usr
 
         ## As the zlib and PNG libraries are not in a standard path that will be checked automatically by the compiler,
         ## we include them with the JASPER include and library path
